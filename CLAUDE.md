@@ -1,184 +1,141 @@
 # Job Search Tool — Claude Code Guide
 
-This is an automated job search pipeline that discovers roles from multiple sources, scores them against a candidate profile using Claude AI, cross-references LinkedIn connections, and generates daily reports.
+This is an automated job search pipeline. You (Claude Code) are the primary interface. Users will talk to you in plain English and you handle everything — setup, configuration, running searches, reading reports, tuning the system.
 
-## First-Time Setup Guide
+## First-Time User Detection
 
-When a new user clones this repo and opens Claude Code, walk them through setup by opening the interactive guide:
+When a user first opens Claude Code in this directory, check if they're set up:
 
-```
-Open docs/guide.html in the browser to see a visual walkthrough of how the tool works.
-```
+1. Check if `config/profile_index.json` exists
+2. Check if `.env` exists
+3. Check if `data/connections.csv` exists
 
-Then help them complete these steps:
+If ANY of these are missing, the user is new. Start with:
 
-### 1. Create their `.env` file
+> "Welcome! This is an AI-powered job search tool. Before we do anything, let me open the visual guide so you can see what this tool does."
+
+Then open `docs/guide.html` in their browser. After that, walk them through setup conversationally (see below).
+
+If all three exist, they're set up. Greet them and ask what they'd like to do.
+
+## Conversational Onboarding
+
+Do NOT tell the user to edit files or run terminal commands. Instead, have a conversation and do it for them. Walk through these steps one at a time, asking questions in plain English:
+
+### Step 1: Install dependencies
+Do this silently — just run the commands. If `.venv` doesn't exist, create it and install:
 ```bash
-cp .env.example .env
-```
-They need two API keys:
-- `ANTHROPIC_API_KEY` — from console.anthropic.com (required for Claude scoring)
-- `SERPER_API_KEY` — from serper.dev (required for Google search discovery, 2500 free queries/month)
-
-### 2. Create their `config/profile_index.json`
-Copy the example and fill in their own profile:
-```bash
-cp config/profile_index.example.json config/profile_index.json
-```
-This file defines who the candidate IS — their name, location, salary floor, target titles, competencies, tools, education, experience highlights, and industry interests. The Claude scoring system uses this to evaluate job fit.
-
-### 3. Create their `config/verisk_reference.json`
-Copy the example and fill in a reference job:
-```bash
-cp config/verisk_reference.json.example config/verisk_reference.json
-```
-This is a "gold standard" job posting that represents the candidate's ideal role. Claude uses it as a reference point when scoring. Name it whatever you want — just keep the same JSON structure.
-
-### 4. Add their LinkedIn connections
-Export connections from LinkedIn (Settings → Data Privacy → Get a copy of your data → Connections) and place the CSV at:
-```
-data/connections.csv
-```
-This enables network matching — the tool will flag when you have connections at companies with open roles.
-
-### 5. Edit `config/settings.json`
-Update location, remote preference, and score threshold to match their search:
-- `location` — their city (used in location filtering)
-- `is_remote` — whether they prefer remote roles
-- `score_threshold` — minimum fit score (0–100) to include in reports (default: 60)
-- `hours_old` — how recent a posting must be (default: 72 hours)
-
-### 6. Customize `config/ats_companies.json`
-Add or remove companies to monitor via direct ATS feeds (Greenhouse, Lever, Ashby, Workday).
-
-### 7. Install and run
-```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .
-jobsearch run
+```
+Tell the user "I'm getting the tool installed" and handle it.
+
+### Step 2: API Keys
+Ask: "Do you have an Anthropic API key? You can get one at console.anthropic.com."
+
+When they provide it, also ask about Serper: "Do you also have a Serper API key? It's free at serper.dev — gives you 2,500 Google searches a month. This is optional but helps find more jobs."
+
+Then create the `.env` file for them with whatever keys they provide. Never show the keys back to them in the chat.
+
+### Step 3: Build Their Profile (most important)
+This is a CONVERSATION, not a form. Ask them questions one at a time and build `config/profile_index.json` from their answers. Use `config/profile_index.example.json` as the template.
+
+Start with: "Let's set up your profile. This is what the tool uses to score every job — the better your profile, the better your results."
+
+Then ask these one at a time (adapt based on their answers):
+
+1. "What's your name and where are you based?"
+2. "Are you looking for remote roles, or open to on-site?"
+3. "What's the minimum salary you'd accept?"
+4. "What kind of roles are you looking for? Give me some job titles you'd be excited about."
+5. "What are your strongest professional skills? Think about what you'd put at the top of your resume."
+6. "What tools and technologies do you use regularly?"
+7. "Tell me about your education — degrees, schools, years."
+8. "What are 3-5 of your biggest career accomplishments? Quantify impact if you can (e.g., 'grew revenue 40%', 'managed team of 12')."
+9. "What industries are you most interested in?"
+10. "Last one — give me a 2-3 sentence summary of who you are professionally. What's your superpower?"
+
+After gathering answers, create `config/profile_index.json` and show them a summary: "Here's your profile. Want to change anything?"
+
+### Step 4: Reference Job
+Ask: "Do you have a dream job posting — one you've seen that made you think 'that's exactly what I want'? If you paste the URL or the description, I'll use it to calibrate what 'perfect' looks like for your search."
+
+If they have one, extract the key info and create `config/verisk_reference.json`.
+If they don't have one yet, say: "No worries — you can add one later. Just tell me 'I found my reference job' and paste it."
+
+### Step 5: LinkedIn Connections (optional)
+Ask: "Do you have a LinkedIn data export? If you go to LinkedIn → Settings → Data Privacy → Get a copy of your data → Connections, they'll email you a CSV. Drop it into the data/ folder as connections.csv and I can tell you when you know someone at a company with an open role."
+
+If they don't have it: "No rush — the tool works without it. You can add it anytime."
+
+### Step 6: Settings
+Based on what they told you about location and remote preference, update `config/settings.json` for them. Don't ask them about score thresholds or technical settings — just use sensible defaults.
+
+### Step 7: Ready
+Say: "You're all set! Say 'run a search' whenever you're ready and I'll find jobs for you."
+
+## What Users Will Ask (and what to do)
+
+### Running Searches
+- "Run a search" / "Find me jobs" / "Search for jobs" → Run `jobsearch run` in their activated venv
+- "Search for [specific thing]" → Run `jobsearch search "[their query]"`
+- "How's my search going?" / "Status" → Run `jobsearch status`
+
+Always activate the venv first: `source .venv/bin/activate && jobsearch run`
+
+### Reading Results
+- "What did you find?" / "Show me the results" / "Top jobs?" → Read the latest file in `data/reports/`, summarize the top 5-10 results in a friendly way. Highlight scores, company names, and whether they have connections there.
+- "Any jobs with connections?" → Read the report and filter for entries that have network connections listed.
+- "Tell me about the [company] job" → Find that specific entry in the report and give details.
+
+When summarizing reports, be conversational — don't just dump the markdown. Say things like "Your best match today is a 95/100 at OpenAI — it's an AI Adoption Manager role. You also know someone there."
+
+### Updating Their Profile
+- "Add [skill] to my profile" → Edit `config/profile_index.json`
+- "Change my salary to [amount]" → Edit the salary_floor field
+- "I want to target [new titles]" → Add to target_titles list
+- "Here's my reference job: [paste]" → Create/update `config/verisk_reference.json`
+
+### Managing Companies
+- "Add [company] to monitoring" → Run `jobsearch add-company` with the right flags (look up the ATS type for them)
+- "Monitor more companies from my LinkedIn" → Run `jobsearch expand-ats`
+
+### Tuning (only if they ask)
+- "I'm getting too many/few results" → Adjust score_threshold in settings.json
+- "Include older postings" → Adjust hours_old
+- Users should never need to touch triage keywords or scoring rubrics — but if they ask, help them.
+
+## Architecture (for your reference, not the user's)
+
+```
+Discovery (3 sources)  →  Triage (free)  →  Scoring (Claude API)  →  Report
+├─ JobSpy (5 boards)      Keyword filter     Semantic 0-100            Markdown
+├─ ATS feeds (57+ co's)   Location filter    Network context boost     data/reports/
+└─ Serper (Google)         Score 0-10         Salary/seniority signal
 ```
 
-## Architecture Overview
+### Key files:
+- `src/cli.py` — CLI entry point (Click framework)
+- `src/discovery/` — JobSpy, ATS feeds, Serper search
+- `src/scoring/triage.py` — Free keyword pre-filter
+- `src/scoring/fit_scorer.py` — Claude API scoring with rubric
+- `src/network/matcher.py` — LinkedIn connection matching
+- `src/reporting/generator.py` — Markdown report generation
+- `src/state/manager.py` — Deduplication + query tracking
 
-```
-Discovery (3 sources)    →    Triage (free)    →    Scoring (Claude API)    →    Report
-├─ JobSpy (5 boards)          Keyword filter         Semantic fit scoring       Markdown report
-├─ ATS feeds (57+ co's)      Location filter         Network context boost      data/reports/YYYY-MM-DD.md
-└─ Serper (Google)            Score 0-10              Score 0-100
-```
+### Scoring rubric:
+- 90-100: Near-perfect fit, primary mission alignment
+- 75-89: Strong, 2 of 3 core pillars present
+- 60-74: Moderate, credible entry point
+- 40-59: Weak overlap
+- 0-39: Poor fit (filtered out)
 
-### Discovery Sources
-- **JobSpy** (`src/discovery/jobspy_search.py`): Scrapes Indeed, LinkedIn, ZipRecruiter, Google, Glassdoor using 16 pre-defined queries
-- **ATS Feeds** (`src/discovery/ats_feeds.py`): Polls Greenhouse, Lever, Ashby, Workday APIs for companies in `config/ats_companies.json`
-- **Serper** (`src/discovery/serper_search.py`): Google searches via Serper API for niche job boards
-
-### Two-Stage Filtering
-1. **Triage** (`src/scoring/triage.py`): Free, instant keyword + location filter. Scores 0–10. Rejects irrelevant roles (engineers, healthcare, sales). Only Denver/Front Range or remote pass.
-2. **Claude Scoring** (`src/scoring/fit_scorer.py`): Semantic evaluation via Claude API. Scores 0–100 with detailed reasoning, salary signal, innovation signal, seniority match, key overlaps, and gaps.
-
-### Network Matching
-`src/network/matcher.py` cross-references the company on each job against `data/connections.csv`. Uses exact + fuzzy matching. Connections are passed to Claude as context, giving a 3–5 point boost for borderline jobs (score 55–70).
-
-### State Management
-`src/state/manager.py` tracks all seen jobs in `data/seen_jobs.json` to prevent duplicates across runs. Also tracks query performance in `data/query_performance.json`.
-
-### Reporting
-`src/reporting/generator.py` produces daily markdown reports sorted by score, with salary info, network connections, apply links, and Claude's reasoning.
-
-## CLI Commands
-
-| Command | What it does |
-|---------|-------------|
-| `jobsearch run` | Full pipeline: discover → triage → score → report |
-| `jobsearch search "query"` | Ad-hoc single-query search with scoring |
-| `jobsearch status` | Stats: jobs seen, top queries, network size |
-| `jobsearch add-company "Name" --ats greenhouse --token slug` | Add a company to ATS monitoring |
-| `jobsearch expand-ats /path/to/LinkedInExport --auto` | Auto-detect ATS platforms from LinkedIn data |
-
-## Folder Structure
-
-```
-job-search-tool/
-├── config/
-│   ├── settings.json              # Runtime settings (API keys via ENV:, thresholds, location)
-│   ├── profile_index.json         # YOUR profile (gitignored — personal)
-│   ├── verisk_reference.json      # YOUR reference job (gitignored — personal)
-│   ├── ats_companies.json         # Companies to monitor via ATS feeds
-│   ├── profile_index.example.json # Template for new users
-│   └── verisk_reference.json.example # Template for new users
-├── data/
-│   ├── connections.csv            # LinkedIn connections export (gitignored — personal)
-│   ├── seen_jobs.json             # Deduplication state (gitignored)
-│   ├── query_performance.json     # Query effectiveness tracking (gitignored)
-│   ├── reports/                   # Daily markdown reports (gitignored)
-│   └── logs/                      # Run logs (gitignored)
-├── src/
-│   ├── cli.py                     # Click CLI entry point
-│   ├── discovery/
-│   │   ├── jobspy_search.py       # JobSpy board scraper
-│   │   ├── ats_feeds.py           # Direct ATS API polling
-│   │   ├── serper_search.py       # Google search via Serper
-│   │   └── ats_detector.py        # Auto-detect ATS for new companies
-│   ├── scoring/
-│   │   ├── triage.py              # Keyword + location pre-filter (free)
-│   │   └── fit_scorer.py          # Claude AI semantic scoring (paid)
-│   ├── network/
-│   │   └── matcher.py             # LinkedIn connection matching
-│   ├── reporting/
-│   │   └── generator.py           # Markdown report generation
-│   └── state/
-│       └── manager.py             # Deduplication + query tracking
-├── .env                           # API keys (gitignored)
-├── .env.example                   # Template for .env
-├── run.sh                         # Cron wrapper for daily automation
-├── setup.py                       # Package installer
-└── requirements.txt               # Python dependencies
-```
-
-## What Users Can Ask Claude Code to Do
-
-### Search & Discovery
-- "Run a full job search" → `jobsearch run`
-- "Search for AI coach roles" → `jobsearch search "AI coach"`
-- "Add Stripe to the ATS monitoring list" → `jobsearch add-company`
-- "Expand ATS monitoring from my LinkedIn export" → `jobsearch expand-ats`
-
-### Profile Customization
-- "Update my target titles to focus on product management"
-- "Change my salary floor to $150k"
-- "Add new competencies to my profile"
-- "Set a new reference job posting" (update verisk_reference.json)
-
-### Analysis & Reports
-- "Show me my search status" → `jobsearch status`
-- "Read today's report and summarize the top 5 matches"
-- "Which queries are performing best?"
-- "How many jobs have I seen this week?"
-
-### Scoring Tuning
-- "Change the score threshold to 70"
-- "Adjust the triage keywords to include 'program manager'"
-- "Update the scoring rubric to weight remote roles higher"
-
-### Automation
-- "Set up a daily cron job" → configure `run.sh` in crontab
-- "Check the latest run log"
-
-## Key Design Principles
-
-1. **Two-stage filter saves money**: Free keyword triage runs first, Claude API scoring only runs on promising candidates
-2. **Network context matters**: LinkedIn connections are looked up BEFORE scoring so Claude can factor them in
-3. **No duplicates**: All seen jobs are tracked across runs via URL normalization
-4. **Atomic state writes**: State files use tmp + rename to prevent corruption
-5. **Personal data stays local**: Profile, connections, reports, and API keys are all gitignored
-
-## Scoring Rubric (for reference)
-
-| Score | Meaning |
-|-------|---------|
-| 90–100 | Near-perfect: AI enablement is the PRIMARY mission, correct seniority |
-| 75–89 | Strong: 2 of 3 core pillars present (enablement + coaching + building) |
-| 60–74 | Moderate: credible entry points into the candidate's target career |
-| 40–59 | Weak: some overlap but not a strong match |
-| 0–39 | Poor: little overlap with candidate profile |
+### Personal files (all gitignored):
+- `.env` — API keys
+- `config/profile_index.json` — user's profile
+- `config/verisk_reference.json` — user's reference job
+- `data/connections.csv` — LinkedIn connections
+- `data/seen_jobs.json` — dedup state
+- `data/reports/` — search reports
+- `data/logs/` — run logs
