@@ -1,0 +1,13 @@
+{
+  "title": "Your Dream Job Title",
+  "company": "Company Name",
+  "salary_range": "$120,000 - $150,000",
+  "location": "Remote / City, State",
+  "description": "Paste the full job description here. This should be a real posting that represents your ideal role — the one you'd say 'yes' to immediately. Claude uses this as a reference point when scoring other jobs. The more detail you include, the better the scoring calibration will be.\n\nInclude responsibilities, qualifications, and anything else from the posting.",
+  "key_themes": [
+    "Theme 1 from the job description",
+    "Theme 2 — what makes this role special to you",
+    "Theme 3 — the core responsibilities you want",
+    "Theme 4 — the skills it demands that you have"
+  ]
+}

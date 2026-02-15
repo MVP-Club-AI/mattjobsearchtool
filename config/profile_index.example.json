@@ -1,0 +1,40 @@
+{
+  "name": "Your Name",
+  "location": "Denver, CO",
+  "salary_floor": 100000,
+  "remote_preferred": true,
+  "profile_summary": "A 2-3 sentence summary of who you are professionally. What's your superpower? What kind of roles are you targeting? What makes you different from other candidates?",
+  "target_titles": [
+    "Your Target Title 1",
+    "Your Target Title 2",
+    "Your Target Title 3",
+    "Add as many as you want — these are the roles you're looking for"
+  ],
+  "core_competencies": [
+    "Your Core Skill 1",
+    "Your Core Skill 2",
+    "Your Core Skill 3",
+    "Add the skills that define your professional identity"
+  ],
+  "tools": [
+    "Tool 1", "Tool 2", "Tool 3",
+    "List the tools, platforms, and technologies you know"
+  ],
+  "education": [
+    {"degree": "Your Degree", "school": "Your School", "year": 2020}
+  ],
+  "experience_highlights": [
+    "Accomplishment 1 — quantify impact where possible (e.g., 'Increased revenue 40%')",
+    "Accomplishment 2 — what did you build, lead, or improve?",
+    "Accomplishment 3 — show scope and seniority"
+  ],
+  "industry_interests": [
+    "Industry 1",
+    "Industry 2",
+    "Industry 3"
+  ],
+  "linkedin_skills": [
+    "Skill from your LinkedIn profile 1",
+    "Skill from your LinkedIn profile 2"
+  ]
+}

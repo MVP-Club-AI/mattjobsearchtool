@@ -1,0 +1,269 @@
+{
+  "companies": [
+    {
+      "name": "Anthropic",
+      "ats": "greenhouse",
+      "board_token": "anthropic"
+    },
+    {
+      "name": "Perplexity",
+      "ats": "ashby",
+      "board_token": "perplexity"
+    },
+    {
+      "name": "OpenAI",
+      "ats": "ashby",
+      "board_token": "openai"
+    },
+    {
+      "name": "Duolingo",
+      "ats": "greenhouse",
+      "board_token": "duolingo"
+    },
+    {
+      "name": "Khan Academy",
+      "ats": "greenhouse",
+      "board_token": "khanacademy"
+    },
+    {
+      "name": "Coursera",
+      "ats": "greenhouse",
+      "board_token": "coursera"
+    },
+    {
+      "name": "Robinhood",
+      "ats": "greenhouse",
+      "board_token": "robinhood"
+    },
+    {
+      "name": "GitLab",
+      "ats": "greenhouse",
+      "board_token": "gitlab"
+    },
+    {
+      "name": "Dropbox",
+      "ats": "greenhouse",
+      "board_token": "dropbox"
+    },
+    {
+      "name": "Coinbase",
+      "ats": "greenhouse",
+      "board_token": "coinbase"
+    },
+    {
+      "name": "Affirm",
+      "ats": "greenhouse",
+      "board_token": "affirm"
+    },
+    {
+      "name": "Quizlet",
+      "ats": "lever",
+      "board_token": "quizlet-2"
+    },
+    {
+      "name": "Newsela",
+      "ats": "greenhouse",
+      "board_token": "newsela"
+    },
+    {
+      "name": "Wiz",
+      "ats": "greenhouse",
+      "board_token": "wizinc"
+    },
+    {
+      "name": "BetterUp",
+      "ats": "ashby",
+      "board_token": "betterup"
+    },
+    {
+      "name": "Panorama Education",
+      "ats": "greenhouse",
+      "board_token": "panoramaed"
+    },
+    {
+      "name": "ClassDojo",
+      "ats": "ashby",
+      "board_token": "classdojo"
+    },
+    {
+      "name": "Contentful",
+      "ats": "greenhouse",
+      "board_token": "contentful"
+    },
+    {
+      "name": "CodePath",
+      "ats": "greenhouse",
+      "board_token": "codepath"
+    },
+    {
+      "name": "Multiverse",
+      "ats": "ashby",
+      "board_token": "multiverse"
+    },
+    {
+      "name": "Guild",
+      "ats": "greenhouse",
+      "board_token": "guild"
+    },
+    {
+      "name": "MagicSchool AI",
+      "ats": "ashby",
+      "board_token": "magicschool"
+    },
+    {
+      "name": "Sana",
+      "ats": "ashby",
+      "board_token": "sana-roles"
+    },
+    {
+      "name": "Microsoft",
+      "ats": "custom",
+      "board_token": null
+    },
+    {
+      "name": "Amazon",
+      "ats": "custom",
+      "board_token": null
+    },
+    {
+      "name": "Google",
+      "ats": "custom",
+      "board_token": null
+    },
+    {
+      "name": "Palantir",
+      "ats": "custom",
+      "board_token": null
+    },
+    {
+      "name": "aiEDU",
+      "ats": "greenhouse",
+      "board_token": "aiedu"
+    },
+    {
+      "name": "Arthur",
+      "ats": "ashby",
+      "board_token": "arthur"
+    },
+    {
+      "name": "Blend",
+      "ats": "greenhouse",
+      "board_token": "blend"
+    },
+    {
+      "name": "Customer.io",
+      "ats": "greenhouse",
+      "board_token": "customerio"
+    },
+    {
+      "name": "Data & Society Research Institute",
+      "ats": "greenhouse",
+      "board_token": "datasocietyresearchinstitute"
+    },
+    {
+      "name": "Ellevation Education",
+      "ats": "lever",
+      "board_token": "ellevationeducation"
+    },
+    {
+      "name": "Ethos",
+      "ats": "greenhouse",
+      "board_token": "ethos"
+    },
+    {
+      "name": "Freshworks",
+      "ats": "lever",
+      "board_token": "freshworks"
+    },
+    {
+      "name": "General Assembly",
+      "ats": "greenhouse",
+      "board_token": "generalassembly"
+    },
+    {
+      "name": "IXL Learning",
+      "ats": "greenhouse",
+      "board_token": "ixllearning"
+    },
+    {
+      "name": "Omidyar Network",
+      "ats": "greenhouse",
+      "board_token": "omidyarnetwork"
+    },
+    {
+      "name": "One Project",
+      "ats": "greenhouse",
+      "board_token": "oneproject"
+    },
+    {
+      "name": "Outschool",
+      "ats": "greenhouse",
+      "board_token": "outschool"
+    },
+    {
+      "name": "Playlab",
+      "ats": "ashby",
+      "board_token": "playlab"
+    },
+    {
+      "name": "Pursuit",
+      "ats": "greenhouse",
+      "board_token": "pursuit"
+    },
+    {
+      "name": "Reddit, Inc.",
+      "ats": "greenhouse",
+      "board_token": "reddit"
+    },
+    {
+      "name": "Skillsoft",
+      "ats": "greenhouse",
+      "board_token": "skillsoft"
+    },
+    {
+      "name": "SquarePeg",
+      "ats": "ashby",
+      "board_token": "squarepeg"
+    },
+    {
+      "name": "TalentAlly",
+      "ats": "greenhouse",
+      "board_token": "talentally"
+    },
+    {
+      "name": "Thoughtworks",
+      "ats": "greenhouse",
+      "board_token": "thoughtworks"
+    },
+    {
+      "name": "Adobe",
+      "ats": "workday",
+      "board_token": "adobe:wd5:external_experienced"
+    },
+    {
+      "name": "Curriculum Associates",
+      "ats": "workday",
+      "board_token": "curriculumassociates:wd5:External"
+    },
+    {
+      "name": "NVIDIA",
+      "ats": "workday",
+      "board_token": "nvidia:wd5:nvidiaExternalCareerSite"
+    },
+    {
+      "name": "Zoom",
+      "ats": "workday",
+      "board_token": "zoom:wd5:zoom"
+    },
+    {
+      "name": "Netflix",
+      "ats": "workday",
+      "board_token": "netflix:wd1:netflix"
+    },
+    {
+      "name": "Zendesk",
+      "ats": "workday",
+      "board_token": "zendesk:wd1:zendesk"
+    }
+  ]
+}

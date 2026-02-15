@@ -1,0 +1,27 @@
+# Environment and secrets
+.env
+
+# Virtual environment
+.venv/
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Build artifacts
+*.egg-info/
+dist/
+build/
+
+# Personal data - LinkedIn connections
+data/connections.csv
+
+# Personal search results and reports
+data/seen_jobs.json
+data/query_performance.json
+data/reports/
+data/logs/
+
+# Personal profile and job-specific configs
+config/profile_index.json
+config/verisk_reference.json

@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Search Tool — Setup Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Zilla+Slab:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #081F3F;
+      --navy-light: #0E2D54;
+      --navy-mid: #15465B;
+      --blue: #114083;
+      --orange: #D97706;
+      --orange-light: #FA9D33;
+      --orange-glow: rgba(217, 119, 6, 0.15);
+      --cream: #FAF5F0;
+      --white: #FFFFFF;
+      --white-80: rgba(255,255,255,0.8);
+      --white-60: rgba(255,255,255,0.6);
+      --white-40: rgba(255,255,255,0.4);
+      --white-20: rgba(255,255,255,0.2);
+      --white-10: rgba(255,255,255,0.1);
+      --green: #34D399;
+      --red: #F87171;
+      --yellow: #FBBF24;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ---- Background pattern ---- */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(14,45,84,0.6) 0%, transparent 50%),
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 60px,
+          rgba(255,255,255,0.02) 60px,
+          rgba(255,255,255,0.02) 61px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 60px,
+          rgba(255,255,255,0.02) 60px,
+          rgba(255,255,255,0.02) 61px
+        );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ---- Hero ---- */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--white-10);
+      border: 1px solid var(--white-20);
+      border-radius: 100px;
+      padding: 8px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--orange-light);
+      margin-bottom: 32px;
+    }
+
+    .hero-badge svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    h1 {
+      font-family: 'Zilla Slab', serif;
+      font-size: clamp(40px, 6vw, 64px);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    h1 .accent {
+      color: var(--orange);
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      color: var(--white-60);
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+
+    /* ---- Section headers ---- */
+    h2 {
+      font-family: 'Zilla Slab', serif;
+      font-size: 36px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    h2 .accent { color: var(--orange); }
+
+    .section-sub {
+      color: var(--white-60);
+      font-size: 16px;
+      margin-bottom: 40px;
+    }
+
+    section {
+      padding: 60px 0;
+    }
+
+    /* ---- Pipeline diagram ---- */
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 700px) {
+      .pipeline {
+        grid-template-columns: 1fr;
+      }
+      .pipeline-arrow { display: none; }
+    }
+
+    .pipeline-stage {
+      background: var(--navy-light);
+      border: 1px solid var(--white-10);
+      border-radius: 12px;
+      padding: 24px 20px;
+      text-align: center;
+      position: relative;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .pipeline-stage:hover {
+      border-color: var(--orange);
+      transform: translateY(-2px);
+    }
+
+    .stage-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 24px;
+    }
+
+    .stage-icon.discover { background: rgba(59, 130, 246, 0.2); }
+    .stage-icon.triage { background: rgba(251, 191, 36, 0.2); }
+    .stage-icon.score { background: rgba(217, 119, 6, 0.2); }
+    .stage-icon.report { background: rgba(52, 211, 153, 0.2); }
+
+    .stage-title {
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .stage-detail {
+      font-size: 13px;
+      color: var(--white-60);
+      line-height: 1.5;
+    }
+
+    .stage-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 100px;
+      margin-top: 12px;
+    }
+
+    .tag-free { background: rgba(52,211,153,0.15); color: var(--green); }
+    .tag-paid { background: rgba(217,119,6,0.15); color: var(--orange-light); }
+
+    .pipeline-arrows {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .pipeline-arrows span {
+      text-align: center;
+      color: var(--white-40);
+      font-size: 20px;
+    }
+
+    /* ---- Cards grid ---- */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--navy-light);
+      border: 1px solid var(--white-10);
+      border-radius: 12px;
+      padding: 28px 24px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--orange);
+      transform: translateY(-2px);
+    }
+
+    .card-icon {
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+
+    .card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .card p, .card li {
+      font-size: 14px;
+      color: var(--white-60);
+    }
+
+    .card ul {
+      list-style: none;
+      margin-top: 12px;
+    }
+
+    .card ul li {
+      padding: 4px 0;
+      padding-left: 18px;
+      position: relative;
+    }
+
+    .card ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--orange);
+    }
+
+    /* ---- Steps ---- */
+    .steps {
+      counter-reset: step;
+    }
+
+    .step {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 32px;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      counter-increment: step;
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--orange);
+      color: var(--white);
+      font-family: 'Zilla Slab', serif;
+      font-size: 22px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .step-content h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .step-content p {
+      font-size: 14px;
+      color: var(--white-60);
+      margin-bottom: 8px;
+    }
+
+    /* ---- Code blocks ---- */
+    code, .code-block {
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    }
+
+    .code-block {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--white-10);
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-size: 13px;
+      color: var(--white-80);
+      overflow-x: auto;
+      margin: 12px 0;
+      line-height: 1.7;
+    }
+
+    .code-block .comment { color: var(--white-40); }
+    .code-block .cmd { color: var(--orange-light); }
+    .code-block .path { color: var(--green); }
+
+    code {
+      background: rgba(0,0,0,0.3);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: var(--orange-light);
+    }
+
+    /* ---- Folder tree ---- */
+    .tree {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--white-10);
+      border-radius: 12px;
+      padding: 28px 32px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--white-80);
+      overflow-x: auto;
+    }
+
+    .tree .folder { color: var(--orange-light); font-weight: 600; }
+    .tree .file { color: var(--white-60); }
+    .tree .personal { color: var(--red); }
+    .tree .safe { color: var(--green); }
+    .tree .anno {
+      color: var(--white-40);
+      font-style: italic;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+    }
+
+    /* ---- Table ---- */
+    .cmd-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+
+    .cmd-table th {
+      text-align: left;
+      padding: 12px 16px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--white-40);
+      border-bottom: 1px solid var(--white-10);
+    }
+
+    .cmd-table td {
+      padding: 14px 16px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--white-10);
+      color: var(--white-80);
+    }
+
+    .cmd-table td:first-child {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 13px;
+      color: var(--orange-light);
+      white-space: nowrap;
+    }
+
+    .cmd-table tr:last-child td { border-bottom: none; }
+
+    .cmd-table-wrap {
+      background: var(--navy-light);
+      border: 1px solid var(--white-10);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    /* ---- Score bar ---- */
+    .score-range {
+      display: flex;
+      gap: 4px;
+      margin: 24px 0 8px;
+      height: 40px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .score-range div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .score-poor { background: rgba(248,113,113,0.3); color: var(--red); flex: 4; }
+    .score-weak { background: rgba(251,191,36,0.2); color: var(--yellow); flex: 2; }
+    .score-mod { background: rgba(217,119,6,0.25); color: var(--orange-light); flex: 1.5; }
+    .score-strong { background: rgba(52,211,153,0.2); color: var(--green); flex: 1.5; }
+    .score-perfect { background: rgba(52,211,153,0.35); color: var(--green); flex: 1; }
+
+    .score-labels {
+      display: flex;
+      font-size: 11px;
+      color: var(--white-40);
+      margin-bottom: 32px;
+    }
+
+    .score-labels span { text-align: center; }
+    .score-labels .l-poor { flex: 4; }
+    .score-labels .l-weak { flex: 2; }
+    .score-labels .l-mod { flex: 1.5; }
+    .score-labels .l-strong { flex: 1.5; }
+    .score-labels .l-perfect { flex: 1; }
+
+    /* ---- Ask Claude section ---- */
+    .ask-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .ask-card {
+      background: var(--navy-light);
+      border: 1px solid var(--white-10);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .ask-card h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--orange-light);
+    }
+
+    .ask-card .prompt {
+      background: rgba(0,0,0,0.3);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--white-80);
+      margin-bottom: 8px;
+      border-left: 3px solid var(--orange);
+    }
+
+    .ask-card .prompt::before {
+      content: '> ';
+      color: var(--orange);
+      font-weight: 700;
+    }
+
+    .ask-card .note {
+      font-size: 12px;
+      color: var(--white-40);
+      margin-top: 8px;
+    }
+
+    /* ---- Output section ---- */
+    .output-example {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--white-10);
+      border-radius: 12px;
+      padding: 28px 32px;
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--white-80);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    .output-example .h1 { color: var(--white); font-weight: 700; font-size: 15px; }
+    .output-example .stat { color: var(--white-60); }
+    .output-example .score-hi { color: var(--green); font-weight: 700; }
+    .output-example .company { color: var(--orange-light); }
+    .output-example .link { color: #60A5FA; text-decoration: underline; }
+    .output-example .network { color: var(--yellow); }
+
+    /* ---- Footer ---- */
+    footer {
+      padding: 60px 0 40px;
+      text-align: center;
+      border-top: 1px solid var(--white-10);
+    }
+
+    footer .logo-text {
+      font-family: 'Zilla Slab', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--orange);
+      margin-bottom: 8px;
+    }
+
+    footer p {
+      color: var(--white-40);
+      font-size: 13px;
+    }
+
+    footer a {
+      color: var(--orange);
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+
+    /* ---- Divider ---- */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--white-10);
+      margin: 0;
+    }
+
+    /* ---- Callout ---- */
+    .callout {
+      background: var(--orange-glow);
+      border: 1px solid rgba(217,119,6,0.3);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+
+    .callout-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--orange-light);
+      margin-bottom: 6px;
+    }
+
+    .callout p {
+      font-size: 14px;
+      color: var(--white-80);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ==================== HERO ==================== -->
+<div class="container">
+  <section class="hero">
+    <div class="hero-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      Built with Claude Code &amp; MVP Club
+    </div>
+    <h1>Stop Searching.<br><span class="accent">Start Scoring.</span></h1>
+    <p class="hero-sub">An AI-powered job search pipeline that discovers hundreds of roles, scores them against your profile with Claude, and surfaces the ones worth your attention.</p>
+  </section>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== HOW IT WORKS ==================== -->
+<div class="container">
+  <section>
+    <h2>How the <span class="accent">Pipeline</span> Works</h2>
+    <p class="section-sub">Four stages. Three discovery sources. One ranked report.</p>
+
+    <div class="pipeline">
+      <div class="pipeline-stage">
+        <div class="stage-icon discover">&#x1F50D;</div>
+        <div class="stage-title">Discover</div>
+        <div class="stage-detail">Scrapes 5 job boards, polls 57+ ATS APIs, and searches Google — all automatically.</div>
+        <span class="stage-tag tag-free">FREE</span>
+      </div>
+      <div class="pipeline-stage">
+        <div class="stage-icon triage">&#x26A1;</div>
+        <div class="stage-title">Triage</div>
+        <div class="stage-detail">Keyword + location filter instantly rejects irrelevant roles. Scores 0–10.</div>
+        <span class="stage-tag tag-free">FREE &amp; INSTANT</span>
+      </div>
+      <div class="pipeline-stage">
+        <div class="stage-icon score">&#x1F9E0;</div>
+        <div class="stage-title">Score</div>
+        <div class="stage-detail">Claude reads each job, compares to your profile, checks your network, and scores 0–100.</div>
+        <span class="stage-tag tag-paid">CLAUDE API</span>
+      </div>
+      <div class="pipeline-stage">
+        <div class="stage-icon report">&#x1F4CA;</div>
+        <div class="stage-title">Report</div>
+        <div class="stage-detail">Ranked markdown report with scores, reasoning, salary signals, and apply links.</div>
+        <span class="stage-tag tag-free">FREE</span>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title">Why two-stage filtering?</div>
+      <p>The free triage pass rejects obviously bad matches before they reach the Claude API — so you only pay to score jobs that have a real chance of matching. A typical run scans 2,000+ jobs but only sends a few hundred to Claude.</p>
+    </div>
+  </section>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== DISCOVERY SOURCES ==================== -->
+<div class="container">
+  <section>
+    <h2>Discovery <span class="accent">Sources</span></h2>
+    <p class="section-sub">Three engines cast a wide net so you never miss a posting.</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">&#x1F310;</div>
+        <h3>JobSpy</h3>
+        <p>Scrapes five major boards with 16 pre-built search queries.</p>
+        <ul>
+          <li>Indeed</li>
+          <li>LinkedIn</li>
+          <li>ZipRecruiter</li>
+          <li>Google Jobs</li>
+          <li>Glassdoor</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#x1F3E2;</div>
+        <h3>ATS Feeds</h3>
+        <p>Directly polls career pages of 57+ companies via their applicant tracking system APIs.</p>
+        <ul>
+          <li>Greenhouse</li>
+          <li>Lever</li>
+          <li>Ashby</li>
+          <li>Workday</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#x1F50E;</div>
+        <h3>Serper (Google)</h3>
+        <p>Google searches targeting niche job boards and company career pages that the other sources miss.</p>
+        <ul>
+          <li>10 specialized queries</li>
+          <li>2,500 free searches/month</li>
+          <li>Catches niche postings</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== SCORING ==================== -->
+<div class="container">
+  <section>
+    <h2>Claude <span class="accent">Scoring</span></h2>
+    <p class="section-sub">Every job gets a semantic fit score from 0–100 with detailed reasoning.</p>
+
+    <div class="score-range">
+      <div class="score-poor">0–39</div>
+      <div class="score-weak">40–59</div>
+      <div class="score-mod">60–74</div>
+      <div class="score-strong">75–89</div>
+      <div class="score-perfect">90–100</div>
+    </div>
+    <div class="score-labels">
+      <span class="l-poor">Poor — little overlap</span>
+      <span class="l-weak">Weak</span>
+      <span class="l-mod">Moderate</span>
+      <span class="l-strong">Strong</span>
+      <span class="l-perfect">Perfect</span>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h3>What Claude evaluates</h3>
+        <ul>
+          <li>Role alignment with your target titles</li>
+          <li>Skills overlap with your competencies</li>
+          <li>Seniority match (target / stretch / below)</li>
+          <li>Salary signal vs. your floor</li>
+          <li>Innovation signal (high / medium / low)</li>
+          <li>Location &amp; remote compatibility</li>
+          <li>Network connections at the company</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>What you get back</h3>
+        <ul>
+          <li><strong>fit_score</strong> — 0 to 100</li>
+          <li><strong>reasoning</strong> — 2-3 sentence explanation</li>
+          <li><strong>key_overlaps</strong> — why you're a fit</li>
+          <li><strong>key_gaps</strong> — what to address</li>
+          <li><strong>salary_signal</strong> — above/below your floor</li>
+          <li><strong>seniority_match</strong> — target/stretch/below</li>
+          <li><strong>network_connections</strong> — who you know there</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title">Network Boost</div>
+      <p>When you have LinkedIn connections at a company, Claude sees them before scoring. Borderline jobs (score 55–70) get a 3–5 point boost because a warm intro changes the calculus.</p>
+    </div>
+  </section>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== SETUP ==================== -->
+<div class="container">
+  <section>
+    <h2>Getting <span class="accent">Set Up</span></h2>
+    <p class="section-sub">Six things to configure. Claude Code can walk you through all of them.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Clone &amp; install</h3>
+          <div class="code-block">
+<span class="cmd">git clone</span> https://github.com/hasmatt1066/jobsearchtool.git
+<span class="cmd">cd</span> jobsearchtool
+<span class="cmd">python -m venv</span> .venv && <span class="cmd">source</span> .venv/bin/activate
+<span class="cmd">pip install -e .</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Add your API keys</h3>
+          <p>Copy the example and paste in your keys.</p>
+          <div class="code-block">
+<span class="cmd">cp</span> .env.example .env
+<span class="comment"># Then edit .env with your keys:</span>
+<span class="path">ANTHROPIC_API_KEY</span>=sk-ant-...   <span class="comment"># console.anthropic.com</span>
+<span class="path">SERPER_API_KEY</span>=abc123...       <span class="comment"># serper.dev (free tier)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Create your profile</h3>
+          <p>This is the most important file — it defines who you are. Claude scores every job against this.</p>
+          <div class="code-block">
+<span class="cmd">cp</span> config/profile_index.example.json config/profile_index.json
+<span class="comment"># Edit with your name, target titles, skills, experience, etc.</span>
+          </div>
+          <p>Include: name, location, salary floor, target titles, core competencies, tools, education, experience highlights, and industry interests.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Set a reference job</h3>
+          <p>Find a real job posting that represents your dream role. Paste the full description. Claude uses this as a calibration anchor.</p>
+          <div class="code-block">
+<span class="cmd">cp</span> config/verisk_reference.json.example config/verisk_reference.json
+<span class="comment"># Paste your gold-standard job posting inside</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h3>Add LinkedIn connections</h3>
+          <p>Export from LinkedIn: Settings → Data Privacy → Get a copy of your data → Connections. Place the CSV at:</p>
+          <div class="code-block">
+<span class="path">data/connections.csv</span>
+          </div>
+          <p>This enables the network matching engine — you'll see when you have connections at companies with open roles.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <h3>Tune your settings</h3>
+          <p>Edit <code>config/settings.json</code> to match your search:</p>
+          <div class="code-block">
+<span class="path">"location"</span>: "Denver, CO",       <span class="comment"># Your city</span>
+<span class="path">"is_remote"</span>: true,              <span class="comment"># Remote preference</span>
+<span class="path">"score_threshold"</span>: 60,           <span class="comment"># Min score for reports (0-100)</span>
+<span class="path">"hours_old"</span>: 72,                 <span class="comment"># How recent postings must be</span>
+<span class="path">"max_jobs_per_run"</span>: 500           <span class="comment"># Cap on Claude API calls</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== DATA YOU PROVIDE ==================== -->
+<div class="container">
+  <section>
+    <h2>Data You <span class="accent">Provide</span></h2>
+    <p class="section-sub">Three personal files that stay local and never get pushed to GitHub.</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">&#x1F464;</div>
+        <h3>profile_index.json</h3>
+        <p>Your professional identity: name, salary floor, target titles, skills, experience highlights, education. Claude compares every job against this.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#x2B50;</div>
+        <h3>reference job</h3>
+        <p>A real job posting that represents your ideal role. Full description, key themes, salary range. Claude uses this to calibrate what "perfect" looks like for you.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#x1F91D;</div>
+        <h3>connections.csv</h3>
+        <p>Your LinkedIn connections export. The tool matches company names to flag when you know someone at a company with an open role.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title">Privacy note</div>
+      <p>All three files are in <code>.gitignore</code>. Your profile, connections, search results, and API keys never leave your machine unless you explicitly share them.</p>
+    </div>
+  </section>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== FOLDER STRUCTURE ==================== -->
+<div class="container">
+  <section>
+    <h2>Folder <span class="accent">Structure</span></h2>
+    <p class="section-sub">What lives where, and what's safe to push.</p>
+
+    <div class="tree">
+<span class="folder">job-search-tool/</span>
+├── <span class="folder">config/</span>
+│   ├── <span class="safe">settings.json</span>                <span class="anno">← runtime config (API keys reference ENV vars, safe)</span>
+│   ├── <span class="personal">profile_index.json</span>          <span class="anno">← YOUR profile (gitignored)</span>
+│   ├── <span class="safe">profile_index.example.json</span>  <span class="anno">← template for new users</span>
+│   ├── <span class="personal">verisk_reference.json</span>       <span class="anno">← YOUR reference job (gitignored)</span>
+│   ├── <span class="safe">verisk_reference.json.example</span><span class="anno">← template for new users</span>
+│   └── <span class="safe">ats_companies.json</span>          <span class="anno">← monitored companies (safe, public data)</span>
+├── <span class="folder">data/</span>
+│   ├── <span class="personal">connections.csv</span>             <span class="anno">← YOUR LinkedIn connections (gitignored)</span>
+│   ├── <span class="personal">seen_jobs.json</span>              <span class="anno">← dedup state (gitignored)</span>
+│   ├── <span class="personal">query_performance.json</span>      <span class="anno">← query stats (gitignored)</span>
+│   ├── <span class="personal">reports/</span>                    <span class="anno">← daily reports (gitignored)</span>
+│   └── <span class="personal">logs/</span>                       <span class="anno">← run logs (gitignored)</span>
+├── <span class="folder">src/</span>
+│   ├── <span class="safe">cli.py</span>                       <span class="anno">← Click CLI entry point</span>
+│   ├── <span class="folder">discovery/</span>                   <span class="anno">← job discovery engines</span>
+│   ├── <span class="folder">scoring/</span>                     <span class="anno">← triage + Claude scoring</span>
+│   ├── <span class="folder">network/</span>                     <span class="anno">← LinkedIn connection matching</span>
+│   ├── <span class="folder">reporting/</span>                   <span class="anno">← markdown report generation</span>
+│   └── <span class="folder">state/</span>                       <span class="anno">← deduplication + tracking</span>
+├── <span class="folder">docs/</span>
+│   └── <span class="safe">guide.html</span>                  <span class="anno">← this file</span>
+├── <span class="personal">.env</span>                             <span class="anno">← API keys (gitignored)</span>
+├── <span class="safe">.env.example</span>                     <span class="anno">← template for .env</span>
+├── <span class="safe">run.sh</span>                           <span class="anno">← cron wrapper for automation</span>
+├── <span class="safe">setup.py</span>                         <span class="anno">← package installer</span>
+└── <span class="safe">requirements.txt</span>                 <span class="anno">← Python dependencies</span>
+
+<span style="margin-top:16px;display:block;">
+  <span class="safe">&#9632;</span> = safe to push &nbsp;&nbsp;&nbsp;
+  <span class="personal">&#9632;</span> = personal / gitignored
+</span>
+    </div>
+  </section>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== CLI COMMANDS ==================== -->
+<div class="container">
+  <section>
+    <h2>CLI <span class="accent">Commands</span></h2>
+    <p class="section-sub">Five commands. The main one is <code>jobsearch run</code>.</p>
+
+    <div class="cmd-table-wrap">
+      <table class="cmd-table">
+        <thead>
+          <tr><th>Command</th><th>What it does</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>jobsearch run</td>
+            <td>Full pipeline — discover, triage, score, report. This is the daily driver.</td>
+          </tr>
+          <tr>
+            <td>jobsearch search "query"</td>
+            <td>Ad-hoc single search. Use when you want to explore a specific niche.</td>
+          </tr>
+          <tr>
+            <td>jobsearch status</td>
+            <td>Dashboard view — jobs seen, top queries, network stats.</td>
+          </tr>
+          <tr>
+            <td>jobsearch add-company "Name" --ats greenhouse --token slug</td>
+            <td>Add a company to ATS monitoring so its career page gets polled.</td>
+          </tr>
+          <tr>
+            <td>jobsearch expand-ats /path/to/LinkedInExport</td>
+            <td>Auto-detect ATS platforms from your LinkedIn data and add them.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== WHAT TO ASK CLAUDE CODE ==================== -->
+<div class="container">
+  <section>
+    <h2>What to Ask <span class="accent">Claude Code</span></h2>
+    <p class="section-sub">Open Claude Code in this directory and try these.</p>
+
+    <div class="ask-grid">
+      <div class="ask-card">
+        <h3>Run a search</h3>
+        <div class="prompt">Run a full job search</div>
+        <div class="prompt">Search for product manager roles at AI companies</div>
+        <div class="note">Runs the pipeline and generates a report in data/reports/</div>
+      </div>
+      <div class="ask-card">
+        <h3>Read results</h3>
+        <div class="prompt">Read today's report and give me the top 5</div>
+        <div class="prompt">Which jobs had network connections?</div>
+        <div class="note">Claude can read, filter, and summarize your reports</div>
+      </div>
+      <div class="ask-card">
+        <h3>Update your profile</h3>
+        <div class="prompt">Add "Product Strategy" to my competencies</div>
+        <div class="prompt">Change my salary floor to $150k</div>
+        <div class="note">Claude edits config/profile_index.json directly</div>
+      </div>
+      <div class="ask-card">
+        <h3>Manage companies</h3>
+        <div class="prompt">Add Stripe to the ATS monitoring list</div>
+        <div class="prompt">Expand ATS from my LinkedIn export</div>
+        <div class="note">Grows the company list that gets polled daily</div>
+      </div>
+      <div class="ask-card">
+        <h3>Tune scoring</h3>
+        <div class="prompt">Raise the score threshold to 70</div>
+        <div class="prompt">Show me which queries perform best</div>
+        <div class="note">Adjusts what shows up in your reports</div>
+      </div>
+      <div class="ask-card">
+        <h3>Automate</h3>
+        <div class="prompt">Set up a daily cron job at 6 AM</div>
+        <div class="prompt">Check the latest run log</div>
+        <div class="note">Uses run.sh for unattended daily runs</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== EXAMPLE OUTPUT ==================== -->
+<div class="container">
+  <section>
+    <h2>Example <span class="accent">Output</span></h2>
+    <p class="section-sub">Here's what a report entry looks like.</p>
+
+    <div class="output-example">
+<span class="h1"># Job Search Report — 2026-02-14</span>
+
+<span class="stat">Jobs scanned: 2,142 | New matches: 64 | Sources: JobSpy: 268, ATS: 1,874</span>
+
+---
+
+<span class="h1">## 1. AI Adoption Manager at <span class="company">OpenAI</span></span>
+
+<strong>Score:</strong> <span class="score-hi">95/100</span> | Seniority: target | Innovation: high
+
+<strong>Salary:</strong> likely_above_floor — OpenAI typically offers $150k-$200k+ for this level
+<strong>Location:</strong> Washington, DC | Remote: Unknown
+
+<strong>Why this fits:</strong> This is a near-perfect match. The role explicitly focuses
+on AI adoption, enablement, and training design — combining all three core
+pillars. It requires hands-on training delivery, community building, and
+coaching practitioners through AI adoption.
+
+<strong>Key overlaps:</strong> AI adoption enablement as PRIMARY mission, Hands-on training
+design and delivery, Community building and Champions network
+<strong>Gaps:</strong> Location is DC, not remote
+
+<span class="network">Connections at OpenAI:</span>
+  <span class="link">Jane Doe</span> — Senior Program Manager
+
+<span class="link">[Apply →]</span>
+    </div>
+  </section>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== WHAT TO DO WITH OUTPUTS ==================== -->
+<div class="container">
+  <section>
+    <h2>What to Do with <span class="accent">Outputs</span></h2>
+    <p class="section-sub">The report is the starting point, not the finish line.</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">&#x1F3AF;</div>
+        <h3>Prioritize by score</h3>
+        <p>90+ scores are rare and worth immediate attention. 75-89 are strong. Below 60 is filtered out automatically.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#x1F91D;</div>
+        <h3>Activate your network</h3>
+        <p>When a report shows connections at a company, reach out for a warm intro before applying cold. This is the highest-leverage action.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#x1F4DD;</div>
+        <h3>Use the reasoning</h3>
+        <p>Claude's "key overlaps" and "gaps" are a cheat sheet for tailoring your cover letter and interview prep for each role.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#x1F4B0;</div>
+        <h3>Check salary signals</h3>
+        <p>The salary_signal field tells you if a role is likely above or below your floor — even when the posting doesn't list compensation.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#x1F504;</div>
+        <h3>Iterate your profile</h3>
+        <p>If great roles score low, your profile might need tuning. Ask Claude Code to update your target titles, competencies, or experience highlights.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#x1F4C8;</div>
+        <h3>Track query performance</h3>
+        <p>Run <code>jobsearch status</code> to see which search queries find the best jobs. Double down on what works, prune what doesn't.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <div class="container">
+    <div class="logo-text">MVP Club</div>
+    <p>Stop learning AI. Start building with it.</p>
+    <p style="margin-top: 12px;"><a href="https://mvpclub.ai">mvpclub.ai</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
