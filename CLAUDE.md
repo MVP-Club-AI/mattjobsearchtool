@@ -41,11 +41,11 @@ Onboarding follows this emotional arc:
 
 ### Step 0: Check for career inputs
 
-Before starting setup, scan the project directory and its subdirectories for career input materials the user may have dropped in:
+Before starting setup, scan for career input materials. Check these locations in order:
 
-- **Resume files**: Look for PDFs, DOCX, or text files with "resume" or "CV" in the name, or any PDF/DOCX in the root or a subdirectory
-- **LinkedIn data export**: Look for directories containing CSVs like `Connections.csv`, `Profile.csv`, `Positions.csv`, `Skills.csv`, `Saved Jobs.csv`, `Company Follows.csv`
-- **Other career docs**: Screenshots, cover letters, performance notes, etc.
+1. **`career-inputs/`** — the designated drop zone for resumes, cover letters, performance reviews, and career notes. Check here first.
+2. **`linkedin-data/`** — the designated drop zone for LinkedIn data exports. Look for `Connections.csv`, `Saved Jobs.csv`, `Company Follows.csv`.
+3. **Project root and other subdirectories** — users may also drop files in the root or elsewhere. Scan for PDFs, DOCX, or text files with "resume" or "CV" in the name.
 
 If you find a resume, READ IT. Extract the user's name, location, job history, skills, education, and accomplishments. This becomes the foundation for the profile — you'll confirm details with the user rather than asking them to dictate everything from memory.
 

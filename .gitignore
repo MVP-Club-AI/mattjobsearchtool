@@ -25,3 +25,11 @@ data/logs/
 # Personal profile and job-specific configs
 config/profile_index.json
 config/verisk_reference.json
+
+# Career input files (resumes, cover letters, etc.) — keep the placeholder
+career-inputs/*
+!career-inputs/DROP_RESUME_HERE.md
+
+# LinkedIn data export files — keep the placeholder
+linkedin-data/*
+!linkedin-data/DROP_LINKEDIN_EXPORT_HERE.md
