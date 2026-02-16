@@ -51,9 +51,36 @@ A typical run scans **2,000+ jobs**, filters down to a few hundred, and scores t
 
 ---
 
-## Getting Started
+## Before You Start: Gather Your Inputs
 
-You need two things: **Claude Code** on your machine and an **Anthropic API key** from [console.anthropic.com](https://console.anthropic.com).
+The tool builds your profile through a conversation with Claude Code — but that conversation is **much richer** if you give it material to work with. Before you clone the repo, spend a few minutes gathering these:
+
+### Required
+
+| What | Why | Where to get it |
+|---|---|---|
+| **Your resume** (PDF, DOCX, or plain text) | Claude reads it to understand your experience, skills, and career trajectory — so you don't have to retype everything. | Wherever you keep your resume. Drop it in the project folder. |
+| **An Anthropic API key** | Powers the AI scoring engine. | [console.anthropic.com](https://console.anthropic.com) |
+
+### Strongly Recommended
+
+| What | Why | Where to get it |
+|---|---|---|
+| **LinkedIn data export** | Gives you two superpowers: (1) **network matching** — the tool flags jobs at companies where you know someone, and (2) **ATS expansion** — auto-detects career pages to monitor from your saved jobs and followed companies. | LinkedIn → Settings → Data Privacy → Get a copy of your data. Select "Connections", "Jobs", and "Company Follows". LinkedIn emails you a ZIP within ~24 hours. |
+| **A "dream job" posting** | A real listing that represents your ideal role. Claude uses it as a calibration anchor — it's how the tool learns what "perfect" looks like for you. | Find one on any job board. Copy the URL or the full description. |
+
+### Optional but Helpful
+
+| What | Why |
+|---|---|
+| **Career notes** — screenshots of achievements, performance reviews, project summaries | The more context Claude has, the better your profile. Toss any relevant docs into the project folder. |
+| **A Serper API key** | Enables Google search as a third discovery source. Free tier gives 2,500 searches/month. Get it at [serper.dev](https://serper.dev). |
+
+> **How this works:** You drop these files into the project directory. When Claude Code asks about your career during setup, you can say "read my resume" or "check my LinkedIn data" and it'll pull the details directly instead of you having to dictate everything from memory.
+
+---
+
+## Getting Started
 
 ### Step 1: Clone
 
@@ -62,15 +89,19 @@ git clone https://github.com/hasmatt1066/jobsearchtool.git
 cd jobsearchtool
 ```
 
-### Step 2: Open Claude Code
+### Step 2: Drop in your inputs
+
+Put your resume, LinkedIn data export (unzipped), and any career notes into the project folder. It doesn't matter how you organize them — Claude Code will find them.
+
+### Step 3: Open Claude Code
 
 ```bash
 claude
 ```
 
-### Step 3: Just talk
+### Step 4: Just talk
 
-That's it. Claude Code detects that you're new and walks you through everything — installs dependencies, asks about your career, builds your profile, and gets you running. No config files to edit. No commands to memorize.
+That's it. Claude Code detects that you're new, reads your inputs, and walks you through everything — installs dependencies, asks about your career, builds your profile, and gets you running. No config files to edit. No commands to memorize.
 
 > **You talk. Claude does the rest.**
 
@@ -80,19 +111,15 @@ That's it. Claude Code detects that you're new and walks you through everything 
 
 Setup is a conversation, not a config file.
 
-> **Claude Code:** Welcome! I see this is your first time using the job search tool. Let me get you set up. Do you have an Anthropic API key?
+> **Claude Code:** Welcome! I see this is your first time using the job search tool. I also see you've dropped in a resume and a LinkedIn data export — nice, that gives me a lot to work with. Let me get you set up. Do you have an Anthropic API key?
 >
 > **You:** Yeah, here it is: sk-ant-...
 >
-> **Claude Code:** Got it, saved. Now let's build your profile. What's your name and where are you based?
->
-> **You:** Sarah Chen, I'm in Austin TX
->
-> **Claude Code:** Great! Are you looking for remote roles, or open to on-site?
+> **Claude Code:** Got it, saved. I've read your resume. Let me confirm a few things — you're Sarah Chen, based in Austin. Are you looking for remote roles, or open to on-site?
 >
 > **You:** Remote preferred but I'd do hybrid
 
-Claude keeps asking — your target titles, top skills, career accomplishments, salary floor, industries you're interested in. Then it builds your profile and shows you a summary:
+Because Claude already read the resume, the conversation is faster — it confirms details rather than asking you to recall everything. It'll still ask about things not on your resume, like salary floor and industries you're interested in. Then it builds your profile:
 
 > **Claude Code:** Here's your profile:
 >
@@ -179,13 +206,15 @@ You don't need to read raw files. Just ask "what did you find?" and Claude gives
 
 ---
 
-## Bonus: LinkedIn Data
+## About the LinkedIn Data Export
 
-Two optional upgrades that make the tool smarter:
+Your LinkedIn export is the single highest-leverage input you can provide. It powers two features:
 
-**Your connections** — Export from LinkedIn (Settings → Data Privacy → Get a copy of your data → Connections) and tell Claude Code where the file is. Every job where you know someone at the company gets flagged.
+**Network matching** — Your connections CSV lets the tool flag every job where you know someone at the company. A warm intro changes everything, and the scoring engine knows it — borderline jobs get boosted when you have a connection there.
 
-**Companies you follow** — If your LinkedIn export includes Saved Jobs or Company Follows, tell Claude Code to expand your monitoring list. It auto-detects which career pages it can poll.
+**ATS expansion** — Your Saved Jobs and Company Follows tell Claude Code which companies you're interested in. It auto-detects their career page APIs (Greenhouse, Lever, Ashby, Workday) and adds them to your monitoring list, so you never miss a posting.
+
+> **How to get it:** LinkedIn → Settings → Data Privacy → Get a copy of your data. Select at minimum "Connections." For the full benefit, also select "Jobs" and "Company Follows." LinkedIn emails you a ZIP file within ~24 hours. Unzip it into the project folder before starting setup.
 
 ---
 

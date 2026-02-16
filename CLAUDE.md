@@ -22,6 +22,21 @@ If all three exist, they're set up. Greet them and ask what they'd like to do.
 
 Do NOT tell the user to edit files or run terminal commands. Instead, have a conversation and do it for them. Walk through these steps one at a time, asking questions in plain English:
 
+### Step 0: Check for career inputs
+Before starting setup, scan the project directory and its subdirectories for career input materials the user may have dropped in:
+
+- **Resume files**: Look for PDFs, DOCX, or text files with "resume" or "CV" in the name, or any PDF/DOCX in the root or a subdirectory
+- **LinkedIn data export**: Look for directories containing CSVs like `Connections.csv`, `Profile.csv`, `Positions.csv`, `Skills.csv`, `Saved Jobs.csv`, `Company Follows.csv`
+- **Other career docs**: Screenshots, cover letters, performance notes, etc.
+
+If you find a resume, READ IT. Extract the user's name, location, job history, skills, education, and accomplishments. This becomes the foundation for the profile — you'll confirm details with the user rather than asking them to dictate everything from memory.
+
+If you find LinkedIn data, note the path. You'll use `Connections.csv` for network matching (Step 5) and `Saved Jobs.csv` / `Company Follows.csv` for ATS expansion.
+
+Tell the user what you found: "I see you've dropped in your resume and LinkedIn data — great, that gives me a head start on building your profile."
+
+If you DON'T find any inputs, tell the user: "I don't see a resume or LinkedIn export in the folder. The tool works best when it can read your career materials — you can drop them in anytime and tell me to update your profile. For now, I'll ask you some questions to get started."
+
 ### Step 1: Install dependencies
 Do this silently — just run the commands. If `.venv` doesn't exist, create it and install:
 ```bash
@@ -39,16 +54,22 @@ When they provide it, also ask about Serper: "Do you also have a Serper API key?
 Then create the `.env` file for them with whatever keys they provide. Never show the keys back to them in the chat.
 
 ### Step 3: Build Their Profile (most important)
-This is a CONVERSATION, not a form. Ask them questions one at a time and build `config/profile_index.json` from their answers. Use `config/profile_index.example.json` as the template.
+This is a CONVERSATION, not a form. Build `config/profile_index.json` from the user's inputs + conversation. Use `config/profile_index.example.json` as the template.
+
+**If you found a resume in Step 0:** You already have most of the data. Pre-fill what you can (name, location, education, skills, experience highlights, tools) and CONFIRM with the user rather than asking them to repeat it. Focus your questions on things NOT on the resume: salary floor, remote preference, target titles (which may differ from current title), industry interests, and their professional summary.
+
+Start with: "I've read your resume. Let me build your profile from it — I'll confirm the key details and ask about a few things that aren't on there."
+
+**If you DON'T have a resume:** Ask questions one at a time.
 
 Start with: "Let's set up your profile. This is what the tool uses to score every job — the better your profile, the better your results."
 
-Then ask these one at a time (adapt based on their answers):
+Questions to cover (skip any you already know from the resume):
 
 1. "What's your name and where are you based?"
 2. "Are you looking for remote roles, or open to on-site?"
 3. "What's the minimum salary you'd accept?"
-4. "What kind of roles are you looking for? Give me some job titles you'd be excited about."
+4. "What kind of roles are you looking for? Give me some job titles you'd be excited about." (Always ask this even with a resume — target titles are about where they're GOING, not where they've been)
 5. "What are your strongest professional skills? Think about what you'd put at the top of your resume."
 6. "What tools and technologies do you use regularly?"
 7. "Tell me about your education — degrees, schools, years."
@@ -64,10 +85,14 @@ Ask: "Do you have a dream job posting — one you've seen that made you think 't
 If they have one, extract the key info and create `config/verisk_reference.json`.
 If they don't have one yet, say: "No worries — you can add one later. Just tell me 'I found my reference job' and paste it."
 
-### Step 5: LinkedIn Connections (optional)
-Ask: "Do you have a LinkedIn data export? If you go to LinkedIn → Settings → Data Privacy → Get a copy of your data → Connections, they'll email you a CSV. Drop it into the data/ folder as connections.csv and I can tell you when you know someone at a company with an open role."
+### Step 5: LinkedIn Connections
+**If you found a LinkedIn data export in Step 0:** Copy the `Connections.csv` to `data/connections.csv` silently. Tell the user: "I found your LinkedIn connections export and set it up — you have [N] connections across [N] companies. I'll flag any jobs where you know someone."
 
-If they don't have it: "No rush — the tool works without it. You can add it anytime."
+Also check for `Saved Jobs.csv` and `Company Follows.csv`. If found, offer to expand ATS monitoring: "I also see your saved jobs and followed companies from LinkedIn. Want me to auto-detect their career pages and add them to your monitoring list?"
+
+**If you did NOT find a LinkedIn export:** Ask: "Do you have a LinkedIn data export? If you go to LinkedIn → Settings → Data Privacy → Get a copy of your data, they'll email you a ZIP. Unzip it into this folder and I can tell you when you know someone at a company with an open role."
+
+If they don't have it: "No rush — the tool works without it. You can add it anytime and tell me to set it up."
 
 ### Step 6: Settings
 Based on what they told you about location and remote preference, update `config/settings.json` for them. Don't ask them about score thresholds or technical settings — just use sensible defaults.
