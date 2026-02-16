@@ -202,7 +202,7 @@
 
     .card ul li { padding: 4px 0; padding-left: 18px; position: relative; }
 
-    .card ul li::before { content: '→'; position: absolute; left: 0; color: var(--orange); }
+    .card ul li::before { content: '\2192'; position: absolute; left: 0; color: var(--orange); }
 
     /* ---- Score bar ---- */
     .score-range {
@@ -439,6 +439,59 @@
     .output-example .network { color: var(--yellow); }
     .output-example .dim { color: var(--white-40); }
 
+    /* ---- Flywheel ---- */
+    .flywheel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin: 32px 0;
+    }
+
+    .flywheel-step {
+      background: var(--navy-light);
+      border: 1px solid var(--white-10);
+      border-radius: 12px;
+      padding: 20px 24px;
+      flex: 1;
+      min-width: 160px;
+      max-width: 200px;
+      text-align: center;
+      position: relative;
+    }
+
+    .flywheel-step .step-num {
+      font-family: 'Zilla Slab', serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--orange);
+      margin-bottom: 8px;
+    }
+
+    .flywheel-step h4 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .flywheel-step p {
+      font-size: 12px;
+      color: var(--white-40);
+      line-height: 1.4;
+    }
+
+    .flywheel-arrow {
+      display: flex;
+      align-items: center;
+      font-size: 24px;
+      color: var(--orange);
+    }
+
+    @media (max-width: 700px) {
+      .flywheel-arrow { display: none; }
+      .flywheel-step { max-width: 100%; }
+    }
+
     /* ---- Divider ---- */
     .divider { border: none; border-top: 1px solid var(--white-10); margin: 0; }
 
@@ -532,24 +585,94 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
       Built with Claude Code &amp; MVP Club
     </div>
-    <h1>Stop Searching.<br><span class="accent">Start Scoring.</span></h1>
-    <p class="hero-sub">An AI-powered job search tool that scans thousands of postings, scores them against your profile, and tells you which ones are actually worth applying to. You talk to Claude Code. It handles the rest.</p>
+    <h1>You Know What You Want.<br><span class="accent">The Problem Is Finding It.</span></h1>
+    <p class="hero-sub">You've scrolled thousands of job listings. Most were irrelevant. The ones that mattered were buried. This tool reads every posting the way you would if you had unlimited time — and tells you which ones are actually worth your attention.</p>
   </section>
 </div>
 
 <hr class="divider">
 
-<!-- ==================== THE BIG IDEA ==================== -->
+<!-- ==================== THE PROBLEM ==================== -->
 <div class="container">
   <section>
-    <h2>The <span class="accent">Big Idea</span></h2>
-    <p class="section-sub">Job boards show you everything. This tool shows you what matters.</p>
+    <h2>The <span class="accent">Problem</span></h2>
+    <p class="section-sub">You don't need another job board. You need a way to cut through the noise.</p>
+
+    <div class="cards" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+      <div class="card">
+        <div class="card-icon">&#x1F4A8;</div>
+        <h3>Volume kills judgment</h3>
+        <p>There are thousands of postings across dozens of boards. You can't read them all, so you rely on keyword filters that miss context — or you scroll until your eyes glaze over and apply to whatever shows up first.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#x1F50D;</div>
+        <h3>The best jobs hide</h3>
+        <p>The role that actually fits your career trajectory is on page 4 of a board you didn't check, or buried in a company's career page you didn't know existed. If you can't read everything, you miss things.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#x23F3;</div>
+        <h3>Searching takes the time you need to apply</h3>
+        <p>Every hour spent scrolling listings is an hour you could spend crafting a strong application for a role that actually fits. The search process competes with the application process.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== WHAT A RESULT LOOKS LIKE (SHOW OUTCOME FIRST) ==================== -->
+<div class="container">
+  <section>
+    <h2>Here's What You <span class="accent">Get</span></h2>
+    <p class="section-sub">Before we explain how it works — this is what your results actually look like. You ask "what did you find?" and Claude tells you.</p>
+
+    <div class="output-example">
+      <div class="label">Claude Code's Summary</div>
+      <p>I found <strong>64 matches</strong> after scanning 2,142 jobs. Here are your top 3:</p>
+
+      <p style="margin-top: 20px;">
+        <strong>1.</strong> <span class="company">AI Adoption Manager</span> at OpenAI — <span class="score-hi">95/100</span><br>
+        Near-perfect match. Focuses on AI adoption, enablement, and training design. They want hands-on workshop delivery and community building — right in your wheelhouse. Salary likely $150k-$200k+.<br>
+        <span class="network">You know Jane Doe there (Senior PM).</span><br>
+        <span class="dim">Gap: Based in DC, not remote.</span>
+      </p>
+
+      <p style="margin-top: 16px;">
+        <strong>2.</strong> <span class="company">Training Content Architect</span> at Anthropic — <span class="score-hi">95/100</span><br>
+        Exceptional fit. AI-augmented learning systems, modular content architecture, train-the-trainer programs. Matches your prototyping experience and coaching style.<br>
+        <span class="network">You know Raj Agarwal there (Member of Technical Staff).</span><br>
+        <span class="dim">Gap: Role is in SF/NYC, not remote.</span>
+      </p>
+
+      <p style="margin-top: 16px;">
+        <strong>3.</strong> <span class="company">AI Deployment Manager</span> at OpenAI — <span class="score-hi">92/100</span><br>
+        Designing hands-on workshops, driving measurable adoption, translating AI capabilities into practical workflows. Strong salary signal above your floor.<br>
+        <span class="dim">Gap: Hybrid in NYC (3 days/week).</span>
+      </p>
+
+      <p style="margin-top: 20px; color: var(--white-40);">Want me to go deeper on any of these, or should I pull up the full list?</p>
+    </div>
+
+    <div class="callout" style="margin-top: 24px;">
+      <div class="callout-title">This is what you're building toward</div>
+      <p>A scored, ranked list of real opportunities — with reasoning you can use in your cover letter and connections you can reach out to. Setup takes one conversation. Your first search runs in minutes.</p>
+    </div>
+  </section>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== HOW IT WORKS ==================== -->
+<div class="container">
+  <section>
+    <h2>How It <span class="accent">Works</span></h2>
+    <p class="section-sub">Four stages, fully automatic. You just talk to Claude Code.</p>
 
     <div class="pipeline">
       <div class="pipeline-stage">
         <div class="stage-icon discover">&#x1F50D;</div>
         <div class="stage-title">Discover</div>
-        <div class="stage-detail">Automatically checks Indeed, LinkedIn, Glassdoor, ZipRecruiter, Google, and 57+ company career pages.</div>
+        <div class="stage-detail">Scans Indeed, LinkedIn, Glassdoor, ZipRecruiter, Google, and 57+ company career pages.</div>
         <span class="stage-tag tag-free">AUTOMATIC</span>
       </div>
       <div class="pipeline-stage">
@@ -561,38 +684,38 @@
       <div class="pipeline-stage">
         <div class="stage-icon score">&#x1F9E0;</div>
         <div class="stage-title">Score</div>
-        <div class="stage-detail">Claude reads every remaining job and scores it 0–100 based on how well it fits YOU.</div>
+        <div class="stage-detail">Claude reads every remaining job and scores it 0-100 based on how well it fits YOU.</div>
         <span class="stage-tag tag-paid">AI-POWERED</span>
       </div>
       <div class="pipeline-stage">
         <div class="stage-icon report">&#x1F4CA;</div>
         <div class="stage-title">Report</div>
-        <div class="stage-detail">You get a ranked list with scores, reasoning, salary estimates, and apply links.</div>
+        <div class="stage-detail">Ranked list with scores, reasoning, salary estimates, network connections, and apply links.</div>
         <span class="stage-tag tag-free">YOUR RESULTS</span>
       </div>
     </div>
 
     <div class="callout">
-      <div class="callout-title">How much does this cost?</div>
-      <p>The discovery and filtering are free. The AI scoring step uses the Claude API, which charges based on usage. A typical run scans 2,000+ jobs, filters down to a few hundred, and costs a few dollars to score. You'll need an API key from <strong>console.anthropic.com</strong> — Claude Code will help you set it up.</p>
+      <div class="callout-title">What does this cost?</div>
+      <p>Discovery and filtering are free. The AI scoring uses the Claude API — a typical run scans 2,000+ jobs and costs a few dollars. You'll need an API key from <strong>console.anthropic.com</strong>.</p>
     </div>
   </section>
 </div>
 
 <hr class="divider">
 
-<!-- ==================== WHAT MAKES IT SMART ==================== -->
+<!-- ==================== SCORING ==================== -->
 <div class="container">
   <section>
-    <h2>What Makes It <span class="accent">Smart</span></h2>
-    <p class="section-sub">It doesn't just match keywords. It understands your career.</p>
+    <h2>Scores on <span class="accent">Fit</span>, Not Keywords</h2>
+    <p class="section-sub">Claude reads the full job description and compares it to your career story — where you've been, what you're good at, where you're headed.</p>
 
     <div class="score-range">
-      <div class="score-poor">0–39</div>
-      <div class="score-weak">40–59</div>
-      <div class="score-mod">60–74</div>
-      <div class="score-strong">75–89</div>
-      <div class="score-perfect">90–100</div>
+      <div class="score-poor">0-39</div>
+      <div class="score-weak">40-59</div>
+      <div class="score-mod">60-74</div>
+      <div class="score-strong">75-89</div>
+      <div class="score-perfect">90-100</div>
     </div>
     <div class="score-labels">
       <span class="l-poor">Not for you</span>
@@ -604,24 +727,19 @@
 
     <div class="cards">
       <div class="card">
-        <div class="card-icon">&#x1F3AF;</div>
-        <h3>Scores jobs on fit, not keywords</h3>
-        <p>Claude reads the full job description and compares it to your career story — your skills, your experience, where you're headed. A keyword matcher would miss context. Claude gets it.</p>
+        <div class="card-icon">&#x1F4DD;</div>
+        <h3>Every score explains itself</h3>
+        <p>You don't just see a number — you see what matched, what didn't, and what you'd need to address in your application. It's a cheat sheet for your cover letter.</p>
       </div>
       <div class="card">
         <div class="card-icon">&#x1F91D;</div>
         <h3>Knows who you know</h3>
-        <p>If you upload your LinkedIn connections, the tool checks whether you know someone at each company. Jobs where you have a warm intro get boosted — because that actually matters.</p>
+        <p>Upload your LinkedIn connections and the tool flags every job where you have a warm intro. Those matches get boosted — because a connection actually changes your odds.</p>
       </div>
       <div class="card">
         <div class="card-icon">&#x1F4B0;</div>
         <h3>Reads between the salary lines</h3>
-        <p>Even when a job doesn't list compensation, Claude estimates whether it's likely above or below your target based on the company, role level, and market context.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">&#x1F4DD;</div>
-        <h3>Tells you why</h3>
-        <p>Every score comes with reasoning — what matches, what doesn't, and what you'd need to address in your application. It's a cheat sheet for your cover letter.</p>
+        <p>Even when pay isn't listed, Claude estimates whether a role is above or below your target based on the company, level, and market context.</p>
       </div>
     </div>
   </section>
@@ -629,11 +747,11 @@
 
 <hr class="divider">
 
-<!-- ==================== GETTING STARTED ==================== -->
+<!-- ==================== YOUR FIRST WIN ==================== -->
 <div class="container">
   <section>
-    <h2>Getting <span class="accent">Started</span></h2>
-    <p class="section-sub">You only need two things to begin. Claude Code walks you through everything else.</p>
+    <h2>Your First <span class="accent">Win</span></h2>
+    <p class="section-sub">The fastest way to understand this tool is to use it. Three steps to your first real result.</p>
 
     <div class="prereqs">
       <div class="prereq">
@@ -651,32 +769,26 @@
     <div class="setup-steps">
       <div class="setup-step">
         <div class="setup-step-num">1</div>
-        <h3>Clone the repo</h3>
-        <p>This is the only terminal command you need to type yourself.</p>
+        <h3>Clone and open</h3>
+        <p>Drop your resume into the project folder — Claude reads it so you don't have to retype your career from memory.</p>
         <div class="code-block">
 <span class="cmd">git clone</span> https://github.com/hasmatt1066/jobsearchtool.git
 <span class="cmd">cd</span> jobsearchtool
-        </div>
-      </div>
-      <div class="setup-step">
-        <div class="setup-step-num">2</div>
-        <h3>Open Claude Code</h3>
-        <p>Launch Claude Code in the project folder. It will detect that you're new and start the setup conversation.</p>
-        <div class="code-block">
 <span class="cmd">claude</span>
         </div>
       </div>
       <div class="setup-step">
-        <div class="setup-step-num">3</div>
-        <h3>Just talk</h3>
-        <p>Claude Code will ask you about your career, install everything, build your profile, and get you running. No config files to edit. No commands to memorize.</p>
-        <div class="user-action"><strong>You talk.</strong> Claude does the rest.</div>
+        <div class="setup-step-num">2</div>
+        <h3>Have a conversation</h3>
+        <p>Claude Code detects you're new and walks you through everything. It reads your resume, confirms details, and asks where you want to go — not where you've been.</p>
+        <div class="user-action"><strong>You talk.</strong> Claude builds your profile, installs everything, and handles all the configuration.</div>
       </div>
-    </div>
-
-    <div class="callout" style="margin-top: 32px;">
-      <div class="callout-title">What Claude Code will ask you</div>
-      <p>It'll have a conversation — your name, where you're based, what roles you're targeting, your skills, your biggest career wins, your salary floor. Think of it like filling out a profile, except you just chat naturally and Claude builds everything behind the scenes.</p>
+      <div class="setup-step">
+        <div class="setup-step-num">3</div>
+        <h3>See your results</h3>
+        <p>Say "run a search." A few minutes later you have a scored, ranked list of real opportunities — with reasoning you can use and connections you can reach out to.</p>
+        <div class="user-action"><strong>That's your first win.</strong> Everything after this is tuning.</div>
+      </div>
     </div>
   </section>
 </div>
@@ -687,28 +799,16 @@
 <div class="container">
   <section>
     <h2>What Setup <span class="accent">Looks Like</span></h2>
-    <p class="section-sub">A conversation, not a config file.</p>
+    <p class="section-sub">A conversation, not a config file. Claude does the heavy lifting.</p>
 
     <div class="convo">
       <div class="bubble claude">
         <div class="bubble-label">Claude Code</div>
-        Welcome! I see this is your first time using the job search tool. Let me get you set up — I'll ask a few questions and handle everything else. First, do you have an Anthropic API key?
-      </div>
-      <div class="bubble you">
-        <div class="bubble-label">You</div>
-        Yeah, here it is: sk-ant-...
+        Welcome! I found your resume — that gives me a head start. I've read it: you're Sarah Chen, based in Austin, with 8 years in product management. Let me confirm a few things and ask about where you want to go.
       </div>
       <div class="bubble claude">
         <div class="bubble-label">Claude Code</div>
-        Got it, saved. Now let's build your profile. What's your name and where are you based?
-      </div>
-      <div class="bubble you">
-        <div class="bubble-label">You</div>
-        Sarah Chen, I'm in Austin TX
-      </div>
-      <div class="bubble claude">
-        <div class="bubble-label">Claude Code</div>
-        Great! Are you looking for remote roles, or open to on-site in Austin?
+        Are you looking for remote roles, or open to on-site?
       </div>
       <div class="bubble you">
         <div class="bubble-label">You</div>
@@ -719,7 +819,7 @@
 
       <div class="bubble claude">
         <div class="bubble-label">Claude Code</div>
-        What kind of roles are you looking for? Give me some titles you'd be excited about.
+        What kind of roles are you targeting? These might be different from your current title — where do you want to go?
       </div>
       <div class="bubble you">
         <div class="bubble-label">You</div>
@@ -727,7 +827,7 @@
       </div>
       <div class="bubble claude">
         <div class="bubble-label">Claude Code</div>
-        Perfect. What are your biggest career accomplishments — the things you'd want a recruiter to know first?
+        What are your biggest career wins — the things you'd want a recruiter to know first?
       </div>
       <div class="bubble you">
         <div class="bubble-label">You</div>
@@ -738,7 +838,7 @@
 
       <div class="bubble claude">
         <div class="bubble-label">Claude Code</div>
-        Here's your profile. Take a look:<br><br>
+        Here's your profile:<br><br>
         <strong>Sarah Chen</strong> — Austin, TX (remote preferred)<br>
         Targeting: Product Manager, Senior PM, Director of Product<br>
         Salary floor: $160k<br>
@@ -749,6 +849,47 @@
         <div class="bubble-label">You</div>
         Looks good, let's go!
       </div>
+    </div>
+  </section>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== THE FLYWHEEL ==================== -->
+<div class="container">
+  <section>
+    <h2>It Gets <span class="accent">Better</span></h2>
+    <p class="section-sub">Your first search is a starting point. The real value comes from iteration — each run sharpens the results.</p>
+
+    <div class="flywheel">
+      <div class="flywheel-step">
+        <div class="step-num">1</div>
+        <h4>Run a search</h4>
+        <p>See your first batch of scored, ranked results</p>
+      </div>
+      <div class="flywheel-arrow">&#x2192;</div>
+      <div class="flywheel-step">
+        <div class="step-num">2</div>
+        <h4>Spot patterns</h4>
+        <p>Which scores surprise you? Which companies keep showing up?</p>
+      </div>
+      <div class="flywheel-arrow">&#x2192;</div>
+      <div class="flywheel-step">
+        <div class="step-num">3</div>
+        <h4>Tune your profile</h4>
+        <p>"Add this skill" / "Raise my salary floor" / "Here's my dream job"</p>
+      </div>
+      <div class="flywheel-arrow">&#x2192;</div>
+      <div class="flywheel-step">
+        <div class="step-num">4</div>
+        <h4>Sharper results</h4>
+        <p>Next search reflects what you actually care about. Repeat.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title">The tool learns what you want</div>
+      <p>Every time you tune your profile, add a reference job, or adjust your targets, the scoring gets more precise. The first search gives you a baseline. The third search gives you a shortlist. The system doesn't just find jobs — it helps you clarify what you're actually looking for.</p>
     </div>
   </section>
 </div>
@@ -777,23 +918,9 @@
         <div class="response">Three matches: Anthropic (1 connection), GitLab (2 connections), OpenAI (1 connection).</div>
       </div>
       <div class="ask-card">
-        <h3>Update your profile</h3>
+        <h3>Tune your profile</h3>
         <div class="prompt">Add "AI Strategy" to my skills</div>
-        <div class="response">Done — added to your core competencies.</div>
-        <div class="prompt">Change my salary floor to $180k</div>
-        <div class="response">Updated. Future scoring will use $180k as your minimum.</div>
-      </div>
-      <div class="ask-card">
-        <h3>Manage your search</h3>
-        <div class="prompt">Start monitoring Stripe's career page</div>
-        <div class="response">Found Stripe on Greenhouse. Added to your monitoring list — I'll check their postings on every run.</div>
-        <div class="prompt">How's my search going overall?</div>
-        <div class="response">You've scanned 4,200 jobs across 3 runs. 127 passed scoring. Your best-performing query is "AI product manager".</div>
-      </div>
-      <div class="ask-card">
-        <h3>Refine results</h3>
-        <div class="prompt">I'm getting too many mediocre matches</div>
-        <div class="response">I'll raise your score threshold from 60 to 70. You'll see fewer results but they'll be stronger.</div>
+        <div class="response">Done — added to your core competencies. This takes effect on your next search.</div>
         <div class="prompt">I found my dream job posting, here it is...</div>
         <div class="response">Saved as your reference job. Future scoring will be calibrated around this posting.</div>
       </div>
@@ -810,69 +937,32 @@
 
 <hr class="divider">
 
-<!-- ==================== WHAT A REPORT LOOKS LIKE ==================== -->
-<div class="container">
-  <section>
-    <h2>What a Report <span class="accent">Looks Like</span></h2>
-    <p class="section-sub">Here's what Claude tells you after a search. You don't need to read raw files — just ask "what did you find?"</p>
-
-    <div class="output-example">
-      <div class="label">Claude Code's Summary</div>
-      <p>I found <strong>64 matches</strong> after scanning 2,142 jobs. Here are your top 3:</p>
-
-      <p style="margin-top: 20px;">
-        <strong>1.</strong> <span class="company">AI Adoption Manager</span> at OpenAI — <span class="score-hi">95/100</span><br>
-        Near-perfect match. Focuses on AI adoption, enablement, and training design. They want hands-on workshop delivery and community building — right in your wheelhouse. Salary likely $150k-$200k+.<br>
-        <span class="network">You know Jane Doe there (Senior PM).</span><br>
-        <span class="dim">Gap: Based in DC, not remote.</span>
-      </p>
-
-      <p style="margin-top: 16px;">
-        <strong>2.</strong> <span class="company">Training Content Architect</span> at Anthropic — <span class="score-hi">95/100</span><br>
-        Exceptional fit. AI-augmented learning systems, modular content architecture, train-the-trainer programs. Matches your prototyping experience and coaching style.<br>
-        <span class="network">You know Raj Agarwal there (Member of Technical Staff).</span><br>
-        <span class="dim">Gap: Role is in SF/NYC, not remote.</span>
-      </p>
-
-      <p style="margin-top: 16px;">
-        <strong>3.</strong> <span class="company">AI Deployment Manager</span> at OpenAI — <span class="score-hi">92/100</span><br>
-        Designing hands-on workshops, driving measurable adoption, translating AI capabilities into practical workflows. Strong salary signal above your floor.<br>
-        <span class="dim">Gap: Hybrid in NYC (3 days/week).</span>
-      </p>
-
-      <p style="margin-top: 20px; color: var(--white-40);">Want me to go deeper on any of these, or should I pull up the full list?</p>
-    </div>
-  </section>
-</div>
-
-<hr class="divider">
-
-<!-- ==================== WHAT TO DO WITH RESULTS ==================== -->
+<!-- ==================== WHAT TO DO NEXT ==================== -->
 <div class="container">
   <section>
     <h2>What to Do <span class="accent">Next</span></h2>
-    <p class="section-sub">The report is your starting point. Here's how to get the most out of it.</p>
+    <p class="section-sub">The report is your starting point. Here's how to act on it.</p>
 
     <div class="cards">
       <div class="card">
         <div class="card-icon">&#x1F3AF;</div>
         <h3>Chase the 90+ scores</h3>
-        <p>Scores above 90 are rare. When one shows up, it's genuinely worth your attention. Don't let it sit.</p>
+        <p>They're rare. When one shows up, it's genuinely worth your attention. Don't let it sit — these are the roles that actually fit your trajectory.</p>
       </div>
       <div class="card">
         <div class="card-icon">&#x1F91D;</div>
         <h3>Reach out to connections first</h3>
-        <p>When you have a connection at a company, message them before applying. A warm intro is worth 10 cold applications.</p>
+        <p>When the tool flags someone you know at a company, message them before applying. A warm intro is worth 10 cold applications.</p>
       </div>
       <div class="card">
         <div class="card-icon">&#x1F4DD;</div>
         <h3>Use the reasoning in your cover letter</h3>
-        <p>Claude tells you exactly what overlaps and what gaps exist. Lead with the overlaps. Address the gaps proactively.</p>
+        <p>Claude tells you exactly what overlaps and what gaps exist. Lead with the overlaps. Address the gaps proactively. You have a cheat sheet — use it.</p>
       </div>
       <div class="card">
         <div class="card-icon">&#x1F504;</div>
-        <h3>Keep tuning your profile</h3>
-        <p>If roles you like are scoring low, your profile might need adjusting. Just tell Claude Code what to change.</p>
+        <h3>Keep tuning</h3>
+        <p>If roles you like are scoring low, your profile needs adjusting. Just tell Claude Code what to change. The next search will be sharper.</p>
       </div>
     </div>
   </section>
@@ -880,23 +970,28 @@
 
 <hr class="divider">
 
-<!-- ==================== OPTIONAL: LINKEDIN ==================== -->
+<!-- ==================== LINKEDIN ==================== -->
 <div class="container">
   <section>
-    <h2>Bonus: <span class="accent">LinkedIn</span> Data</h2>
-    <p class="section-sub">Two optional upgrades that make the tool smarter.</p>
+    <h2>Make It <span class="accent">Smarter</span></h2>
+    <p class="section-sub">Your LinkedIn data is the highest-leverage upgrade. Add it anytime — no need to set it up during initial setup.</p>
 
     <div class="cards" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
       <div class="card">
         <div class="card-icon">&#x1F465;</div>
-        <h3>Your connections</h3>
-        <p>Export your LinkedIn connections (Settings → Data Privacy → Get a copy of your data) and tell Claude Code where the file is. The tool will flag every job where you know someone at the company.</p>
+        <h3>Network matching</h3>
+        <p>Export your connections and the tool flags every job where you know someone at the company. A warm intro changes your odds — the scoring engine knows it and boosts those matches.</p>
       </div>
       <div class="card">
         <div class="card-icon">&#x1F3E2;</div>
-        <h3>Companies you follow</h3>
-        <p>If your LinkedIn export includes Saved Jobs or Company Follows, tell Claude Code to expand your monitoring list. It'll auto-detect which career pages it can poll and add them.</p>
+        <h3>Company monitoring</h3>
+        <p>Your Saved Jobs and Company Follows tell the tool which companies you care about. It auto-detects their career pages and monitors them, so you never miss a posting.</p>
       </div>
+    </div>
+
+    <div class="callout" style="margin-top: 24px;">
+      <div class="callout-title">How to get your LinkedIn data</div>
+      <p>LinkedIn &rarr; Settings &rarr; Data Privacy &rarr; Get a copy of your data. Select "Connections" at minimum. Also select "Jobs" and "Company Follows" for the full benefit. LinkedIn emails you a ZIP within ~24 hours. Unzip it into the project folder and tell Claude Code "I added my LinkedIn data."</p>
     </div>
   </section>
 </div>
