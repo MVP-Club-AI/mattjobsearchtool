@@ -1,3 +1,5 @@
+<a id="readme-top"></a>
+
 <div align="center">
 
 <br>
@@ -16,6 +18,8 @@ You talk to Claude Code. It handles the rest.
 [![License](https://img.shields.io/badge/License-MIT-34D399?style=for-the-badge)](LICENSE)
 
 <br>
+
+[The Problem](#the-problem) &middot; [Your First Win](#your-first-win) &middot; [The Flywheel](#the-flywheel-why-it-gets-better) &middot; [Things You Can Say](#things-you-can-say) &middot; [LinkedIn Data](#make-it-smarter-linkedin-data)
 
 </div>
 
@@ -45,25 +49,29 @@ You know what a great job looks like when you see it. The problem isn't judgment
 
 Meanwhile, the perfect role — the one that actually fits your career trajectory — sits on page 4 of a board you didn't check.
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ## What If You Could Read Every Single One?
 
 That's what this tool does. It scans 2,000+ jobs across five major boards, 57+ company career pages, and Google — then Claude reads each one and scores it against your actual career story. Not keywords. Your story: where you've been, what you're good at, where you're headed.
 
 ```mermaid
 flowchart LR
-    A["Discover\n5 job boards + 57 ATS + Google"] --> B["Filter\nLocation, keywords, direction"]
-    B --> C["Score\nClaude reads & scores 0-100"]
-    C --> D["Report\nRanked list with reasoning"]
+    A["🔍 Discover\n5 job boards + 57 ATS + Google"] --> B["⚡ Filter\nLocation, keywords, direction"]
+    B --> C["🧠 Score\nClaude reads & scores 0–100"]
+    C --> D["📊 Report\nRanked list with reasoning"]
     style A fill:#114083,color:#fff,stroke:#fff
     style B fill:#D97706,color:#fff,stroke:#fff
     style C fill:#D97706,color:#fff,stroke:#fff
     style D fill:#34D399,color:#081F3F,stroke:#081F3F
 ```
 
-You get a ranked list. The best matches float to the top with scores, reasoning, salary estimates, and apply links. If you uploaded your LinkedIn connections, it flags when you know someone at the company.
+You get a ranked list. The best matches float to the top with scores, reasoning, salary estimates, and apply links. If you uploaded your LinkedIn connections, it flags when you know someone at the company.[^1]
 
 > [!NOTE]
 > A typical run scans **2,000+ jobs**, filters down to a few hundred, and scores the best matches — all automatically. The discovery and filtering are free. The AI scoring step uses the Claude API and costs a few dollars per run.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
@@ -102,7 +110,9 @@ Claude Code detects that you're new and walks you through everything — install
 </table>
 
 > [!TIP]
-> Drop your resume into the project folder **before** running `claude`. When Claude Code can read your resume, setup goes from 10 questions to 3 confirmations — it already knows your name, location, skills, and experience.
+> Drop your resume into the project folder **before** running <kbd>claude</kbd>. When Claude Code can read your resume, setup goes from 10 questions to 3 confirmations — it already knows your name, location, skills, and experience.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
@@ -126,6 +136,8 @@ Claude builds your profile from this conversation, confirms it with you, and ask
 
 ${\color{green}\text{That's your first win.}}$ You went from zero to a scored, ranked list of real opportunities. Everything after this is tuning.
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ---
 
 ## The Flywheel: Why It Gets Better
@@ -134,9 +146,9 @@ Your first search gives you a baseline. The real value comes from iteration.
 
 ```mermaid
 flowchart LR
-    A["Run a search"] --> B["See results\nSome scores surprise you"]
-    B --> C["Tune your profile\nAdd skills, adjust targets"]
-    C --> D["Sharper results\nScoring reflects what you care about"]
+    A["🔄 Run a search"] --> B["👀 See results\nSome scores surprise you"]
+    B --> C["🎯 Tune your profile\nAdd skills, adjust targets"]
+    C --> D["📈 Sharper results\nScoring reflects what you care about"]
     D --> A
     style A fill:#D97706,color:#fff,stroke:#fff
     style B fill:#114083,color:#fff,stroke:#fff
@@ -145,6 +157,15 @@ flowchart LR
 ```
 
 Every interaction teaches the system more about what you want. The tool doesn't just find jobs — it helps you clarify what you're actually looking for.
+
+```diff
++ "Add AI Strategy to my skills"        → profile updated, next search is sharper
++ "I found my dream job, here it is..." → scoring calibrated around your ideal role
++ "Raise my salary floor to $180k"      → low-pay roles filtered out automatically
+- "I'm getting too many mediocre matches" → score threshold raised, noise reduced
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
@@ -190,7 +211,9 @@ ${\color{green}\text{Apply now}}$
 </tr>
 </table>
 
-Every score comes with reasoning — what matched, what didn't, and what you'd need to address in your application. This is a cheat sheet for your cover letter: lead with the overlaps, address the gaps proactively.
+Every score comes with reasoning — what matched, what didn't, and what you'd need to address in your application. This is a cheat sheet for your cover letter: lead with the overlaps, address the gaps proactively.[^2]
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
@@ -199,47 +222,57 @@ Every score comes with reasoning — what matched, what didn't, and what you'd n
 Once you're set up, just talk to Claude Code in plain English.
 
 <details>
-<summary><strong>Find jobs</strong></summary>
+<summary><strong>🔍 Find jobs</strong></summary>
+
+<br>
 
 | You say | What happens |
 |---|---|
-| "Run a search" | Scans all sources, scores matches, generates a report |
-| "Search for AI product roles at startups" | Runs a targeted search and scores results |
+| <kbd>Run a search</kbd> | Scans all sources, scores matches, generates a report |
+| <kbd>Search for AI product roles at startups</kbd> | Runs a targeted search and scores results |
 
 </details>
 
 <details>
-<summary><strong>Read results</strong></summary>
+<summary><strong>📊 Read results</strong></summary>
+
+<br>
 
 | You say | What happens |
 |---|---|
-| "What did you find?" | Summarizes your top matches with scores and reasoning |
-| "Which jobs have network connections?" | Filters for jobs where you know someone |
-| "Tell me more about the Anthropic job" | Gives a detailed breakdown of that specific match |
+| <kbd>What did you find?</kbd> | Summarizes your top matches with scores and reasoning |
+| <kbd>Which jobs have network connections?</kbd> | Filters for jobs where you know someone |
+| <kbd>Tell me more about the Anthropic job</kbd> | Gives a detailed breakdown of that specific match |
 
 </details>
 
 <details>
-<summary><strong>Tune your profile</strong></summary>
+<summary><strong>🎯 Tune your profile</strong></summary>
+
+<br>
 
 | You say | What happens |
 |---|---|
-| "Add AI Strategy to my skills" | Updates your profile |
-| "Change my salary floor to $180k" | Adjusts your minimum and future scoring |
-| "I found my dream job posting, here it is..." | Saves it as your reference job to calibrate scoring |
+| <kbd>Add AI Strategy to my skills</kbd> | Updates your profile |
+| <kbd>Change my salary floor to $180k</kbd> | Adjusts your minimum and future scoring |
+| <kbd>I found my dream job posting, here it is...</kbd> | Saves it as your reference job to calibrate scoring |
 
 </details>
 
 <details>
-<summary><strong>Manage your search</strong></summary>
+<summary><strong>⚙️ Manage your search</strong></summary>
+
+<br>
 
 | You say | What happens |
 |---|---|
-| "Start monitoring Stripe's career page" | Detects their ATS and adds them to your list |
-| "I'm getting too many mediocre matches" | Raises your score threshold |
-| "How's my search going overall?" | Shows stats — jobs scanned, top queries, network size |
+| <kbd>Start monitoring Stripe's career page</kbd> | Detects their ATS and adds them to your list |
+| <kbd>I'm getting too many mediocre matches</kbd> | Raises your score threshold |
+| <kbd>How's my search going overall?</kbd> | Shows stats — jobs scanned, top queries, network size |
 
 </details>
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
@@ -251,14 +284,14 @@ Your LinkedIn export is the single highest-leverage upgrade. It unlocks two thin
 <tr>
 <td width="50%">
 
-### Network matching
+### 🤝 Network matching
 
 Your connections let the tool flag every job where you know someone. A warm intro changes everything, and the scoring engine knows it — borderline jobs get boosted when you have a connection.
 
 </td>
 <td width="50%">
 
-### ATS expansion
+### 🏢 ATS expansion
 
 Your Saved Jobs and Company Follows tell the tool which companies you care about. It auto-detects their career pages and adds them to monitoring, so you never miss a posting.
 
@@ -267,9 +300,11 @@ Your Saved Jobs and Company Follows tell the tool which companies you care about
 </table>
 
 > [!TIP]
-> **How to get it:** LinkedIn → Settings → Data Privacy → Get a copy of your data. Select "Connections" at minimum. Also select "Jobs" and "Company Follows" for the full benefit. LinkedIn emails you a ZIP within ~24 hours. Unzip it into the project folder.
+> **How to get it:** LinkedIn → <kbd>Settings</kbd> → <kbd>Data Privacy</kbd> → <kbd>Get a copy of your data</kbd>. Select "Connections" at minimum. Also select "Jobs" and "Company Follows" for the full benefit. LinkedIn emails you a ZIP within ~24 hours. Unzip it into the project folder.
 
-You can add this at any time — just tell Claude Code "I added my LinkedIn data" and it sets everything up.
+You can add this at any time — just tell Claude Code <kbd>I added my LinkedIn data</kbd> and it sets everything up.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
@@ -277,10 +312,15 @@ You can add this at any time — just tell Claude Code "I added my LinkedIn data
 
 | | Action | Why |
 |---|---|---|
-| **1** | **Chase the 90+ scores** | They're rare. When one shows up, it's genuinely worth your attention. |
-| **2** | **Reach out to connections first** | A warm intro is worth 10 cold applications. Message them before applying. |
-| **3** | **Use the reasoning in your cover letter** | Claude tells you exactly what overlaps and gaps exist. Lead with the overlaps. |
-| **4** | **Keep tuning your profile** | If roles you like score low, tell Claude Code to adjust. The next search will be sharper. |
+| ${\color{green}\text{1}}$ | **Chase the 90+ scores** | They're rare. When one shows up, it's genuinely worth your attention. |
+| ${\color{green}\text{2}}$ | **Reach out to connections first** | A warm intro is worth 10 cold applications. Message them before applying. |
+| ${\color{green}\text{3}}$ | **Use the reasoning in your cover letter** | Claude tells you exactly what overlaps and gaps exist. Lead with the overlaps. |
+| ${\color{green}\text{4}}$ | **Keep tuning your profile** | If roles you like score low, tell Claude Code to adjust. The next search will be sharper. |
+
+> [!WARNING]
+> Scores above 90 are rare — most searches produce only a handful. When one shows up, don't let it sit. These are the roles that genuinely match your trajectory.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
@@ -288,6 +328,8 @@ You can add this at any time — just tell Claude Code "I added my LinkedIn data
 
 > [!IMPORTANT]
 > Your profile, API keys, LinkedIn connections, and search results **never leave your machine**. Everything personal is gitignored — the tool works locally and only you see your results.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
@@ -300,3 +342,9 @@ You can add this at any time — just tell Claude Code "I added my LinkedIn data
 <br>
 
 </div>
+
+<!-- FOOTNOTES -->
+
+[^1]: Network matching requires a LinkedIn data export. See [Make It Smarter: LinkedIn Data](#make-it-smarter-linkedin-data) for setup instructions.
+
+[^2]: Scoring uses Claude's semantic understanding of job descriptions, not keyword matching. The rubric weighs mission alignment, skill overlap, seniority fit, and salary signals.
