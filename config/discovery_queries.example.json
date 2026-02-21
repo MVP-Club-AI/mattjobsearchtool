@@ -1,0 +1,23 @@
+{
+  "jobspy": {
+    "defaults": {
+      "is_remote": true,
+      "location": "Your City, State"
+    },
+    "queries": [
+      {"search_term": "Your Target Title 1", "strategy": "title", "enabled": true, "notes": "Your primary target role title"},
+      {"search_term": "Your Target Title 2", "strategy": "title", "enabled": true, "notes": "Another title you're targeting"},
+      {"search_term": "skill + industry keyword phrase", "strategy": "work_description", "enabled": true, "notes": "Describe the work you want to do, not just titles"},
+      {"search_term": "outcome you want to achieve", "strategy": "outcome", "enabled": true, "notes": "What does success look like in the role?"},
+      {"search_term": "Disabled Example Query", "strategy": "title", "enabled": false, "notes": "Set enabled to false to skip a query without deleting it"}
+    ]
+  },
+  "serper": {
+    "queries": [
+      {"query": "\"your key skill\" manager OR director job remote 2026", "strategy": "work_description", "enabled": true, "notes": "Google search with your key skill terms"},
+      {"query": "site:boards.greenhouse.io \"your skill\" OR \"your function\" manager", "strategy": "site_specific", "enabled": true, "notes": "Search specific ATS boards directly"},
+      {"query": "site:jobs.ashbyhq.com \"your skill\" OR \"your function\"", "strategy": "site_specific", "enabled": true, "notes": "Ashby boards — many startups use this"},
+      {"query": "\"we're building\" \"your domain\" hiring OR careers", "strategy": "creative_discovery", "enabled": true, "notes": "Find companies actively building in your space"}
+    ]
+  }
+}
