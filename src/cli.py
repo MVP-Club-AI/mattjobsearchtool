@@ -40,7 +40,7 @@ def load_settings(path: Path) -> dict:
 @click.group()
 @click.pass_context
 def cli(ctx):
-    """Job search automation tool for Matthew Hastings."""
+    """AI-powered job search automation tool."""
     ctx.ensure_object(dict)
     base_dir = Path(__file__).parent.parent
     ctx.obj["base_dir"] = base_dir

@@ -21,15 +21,21 @@ _EXCLUDE_TERMS = [
     "frontend engineer",
     "devops",
     "sre",
+    "site reliability",
     "data scientist",
     "ml engineer",
     "machine learning engineer",
     "accountant",
     "financial analyst",
+    "fp&a",
     "lawyer",
     "legal counsel",
+    "counsel",
     "sales representative",
+    "sales specialist",
+    "sales director",
     "account executive",
+    "account manager",
     "bdr",
     "sdr",
     "nurse",
@@ -40,29 +46,86 @@ _EXCLUDE_TERMS = [
     "database administrator",
     "qa engineer",
     "test engineer",
+    "presales",
+    "pre-sales",
+    "solutions engineer",
+    "solution engineer",
+    "solutions architect",
+    "solution architect",
+    "technical account manager",
+    "support engineer",
+    "support expert",
+    "support specialist",
+    "game design",
+    "game director",
+    "level designer",
+    "noc ",
+    "network operations",
+    "firmware",
+    "hardware",
+    "mechanical engineer",
+    "electrical engineer",
+    "tax ",
+    "audit",
+    "compliance",
+    "regulatory",
+    "recruiter",
+    "talent acquisition",
+    "channel ",
+    "partner manager",
+    "partnership",
+    "marketing manager",
+    "marketing specialist",
+    "growth marketing",
+    "lifecycle marketing",
+    "demand gen",
+    "creative director",
+    "graphic design",
+    "visual design",
+    "art director",
+    "animator",
+    "warehouse",
+    "driver",
+    "cashier",
+    "real estate",
+    "plumber",
+    "electrician",
+    "mechanic",
 ]
 
 # Titles containing any of these terms are explicitly included.
+# Only titles matching at least one include term will pass through.
 _INCLUDE_TERMS = [
+    # Core function: learning/training design
     "learn",
     "train",
     "education",
+    "instructional",
+    "curriculum",
+    "content architect",
+    "content design",
+    "academy",
+    "l&d",
+    "workshop",
+    # AI context
+    "ai ",
+    " ai",
+    "artificial intelligence",
+    # Enablement and adoption
     "enablement",
     "adoption",
-    "product manager",
-    "product design",
-    "curriculum",
-    "ai",
+    "literacy",
+    "upskill",
+    "reskill",
+    "workforce",
+    "center of excellence",
     "transformation",
     "change management",
-    "l&d",
-    "development manager",
+    # Adjacent
+    "product manager",
+    "product design",
     "program manager",
-    "director",
-    "head of",
-    "manager",
     "coach",
-    "content",
 ]
 
 
@@ -470,11 +533,12 @@ class ATSFeeds:
 
     @staticmethod
     def _title_might_be_relevant(title: str) -> bool:
-        """Loose pre-filter to avoid scoring obviously irrelevant roles.
+        """Pre-filter to avoid sending irrelevant roles to Claude for scoring.
 
-        Returns False only when the title clearly matches an excluded
-        category.  Titles that match neither the exclude nor include
-        lists are allowed through so that unusual roles still get scored.
+        A title must match at least one include term AND not match any
+        exclude term. Titles matching neither list are rejected — this
+        prevents generic roles (NOC Lead, Presales Engineer, Game Designer)
+        from consuming scoring API calls.
         """
         lower = title.lower()
 
@@ -486,8 +550,8 @@ class ATSFeeds:
             if term in lower:
                 return True
 
-        # No exclude matched, no include matched -- let it through.
-        return True
+        # No include matched — reject to avoid scoring noise.
+        return False
 
 
 # ------------------------------------------------------------------
