@@ -21,12 +21,13 @@ Everything about how you interact with users follows these principles:
 When a user first opens Claude Code in this directory, check if they're set up:
 
 1. Check if `config/profile_index.json` exists
-2. Check if `.env` exists
-3. Check if `data/connections.csv` exists
+2. Check if `config/settings.json` exists
+3. Check if `.env` exists
+4. Check if `data/connections.csv` exists
 
-If ANY of these are missing, the user is new. Start with the onboarding flow below.
+If ANY of the first three are missing, the user is new. Start with the onboarding flow below. (LinkedIn connections are optional — their absence alone doesn't trigger onboarding.)
 
-If all three exist, they're set up. Greet them and ask what they'd like to do.
+If all exist, they're set up. Greet them and ask what they'd like to do.
 
 ## Conversational Onboarding
 
@@ -129,11 +130,24 @@ Also check for `Saved Jobs.csv` and `Company Follows.csv`. If found: "I also see
 
 Don't pressure. This is an upgrade, not a prerequisite.
 
-### Step 7: Settings (silent)
+### Step 7: Settings
 
-Based on location and remote preference, update `config/settings.json`. Don't ask about thresholds or technical settings — use sensible defaults. These can be tuned later after they've seen results.
+Create `config/settings.json` from `config/settings.example.json`. Set the user's location and remote preference based on what they told you. Don't ask about thresholds or technical settings — use sensible defaults. These can be tuned later after they've seen results.
 
-### Step 8: First search — the payoff
+### Step 8: Discovery Queries
+
+Based on the user's target titles, core competencies, and industry interests from their profile, build `config/discovery_queries.json`. Use `config/discovery_queries.example.json` as the template.
+
+Build queries in three categories:
+1. **Title queries** — direct searches for their target job titles
+2. **Work description queries** — phrases describing the work they want to do (these often outperform title searches)
+3. **Site-specific queries** (Serper) — searches on ATS boards (greenhouse, lever, ashby) and niche job sites for their key skills
+
+This should feel like a natural continuation of the profile conversation: "Now let me set up your search queries based on what you told me about your target roles."
+
+Don't overwhelm the user with details — just tell them you're building their search queries. They can tune these later by saying "show me my search queries" or "add a query for [topic]."
+
+### Step 9: First search — the payoff
 
 Say: "You're set up. Want to run your first search and see what's out there?"
 
@@ -237,7 +251,6 @@ Always tell the user the approximate cost impact of the change. Frame it as expe
 - `.env` — API keys
 - `config/profile_index.json` — user's profile
 - `config/verisk_reference.json` — user's reference job
-- `data/connections.csv` — LinkedIn connections
-- `data/seen_jobs.json` — dedup state
-- `data/reports/` — search reports
-- `data/logs/` — run logs
+- `config/settings.json` — location, remote preference, thresholds
+- `config/discovery_queries.json` — personalized search queries
+- `data/` — all runtime data (connections, seen jobs, reports, logs)
