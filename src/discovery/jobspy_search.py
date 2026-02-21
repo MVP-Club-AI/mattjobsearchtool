@@ -3,46 +3,22 @@ JobSpy-based job discovery module.
 
 Primary discovery source that searches across LinkedIn, Indeed, Glassdoor,
 Google, and ZipRecruiter using the python-jobspy library.
+
+Queries are loaded from config/discovery_queries.json so they can be
+tuned without code changes.
 """
 
+import json
 import logging
 import random
 import re
 import time
 import urllib.parse
+from pathlib import Path
 
 from jobspy import scrape_jobs
 
 logger = logging.getLogger(__name__)
-
-QUERY_SETS = [
-    # Group 1 - Direct AI enablement titles
-    {"search_term": "AI Enablement Lead"},
-    {"search_term": "AI Adoption Manager"},
-    {"search_term": "Director AI Training"},
-    {"search_term": "Head of AI Academy"},
-    {"search_term": "AI Change Management"},
-    # Group 2 - Learning/L&D + AI intersection
-    {"search_term": "Learning Manager AI"},
-    {"search_term": "Director Learning Design"},
-    {"search_term": "Senior Manager Learning Experience Design"},
-    {"search_term": "Learning Architect AI"},
-    {"search_term": "L&D Manager AI tools"},
-    # Group 3 - Product + Education
-    {"search_term": "Product Manager Education Technology"},
-    {"search_term": "Learning Product Manager"},
-    {"search_term": "Product Manager EdTech"},
-    # Group 4 - Enablement broadly
-    {"search_term": "Director of Enablement AI"},
-    {"search_term": "Customer Education Manager AI"},
-    {"search_term": "Workforce Transformation AI"},
-    # Group 5 - Industry-specific
-    {"search_term": "AI Training Manager robotics", "is_remote": False, "location": "Denver, CO"},
-    {"search_term": "AI Training agriculture AgTech"},
-    # Group 6 - Broad catch-alls
-    {"search_term": "AI coaching enablement workforce"},
-    {"search_term": "generative AI learning development manager"},
-]
 
 TRACKING_PARAMS = re.compile(
     r"^(utm_\w+|fbclid|gclid|gad_source|si|ref|tracking_id|rcid|refId|trk|clickTrackingKey)$",
@@ -58,16 +34,39 @@ class JobSpySearch:
     def __init__(self, settings: dict, state_manager):
         self.settings = settings
         self.state_manager = state_manager
+        self._queries, self._defaults = self._load_queries()
+
+    @staticmethod
+    def _load_queries() -> tuple[list[dict], dict]:
+        """Load JobSpy queries from config/discovery_queries.json."""
+        base_dir = Path(__file__).resolve().parent.parent.parent
+        config_path = base_dir / "config" / "discovery_queries.json"
+        try:
+            with open(config_path, "r", encoding="utf-8") as fh:
+                config = json.load(fh)
+            jobspy_config = config.get("jobspy", {})
+            defaults = jobspy_config.get("defaults", {})
+            queries = [q for q in jobspy_config.get("queries", []) if q.get("enabled", True)]
+            logger.info("Loaded %d enabled JobSpy queries from config", len(queries))
+            return queries, defaults
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            logger.warning("Could not load discovery_queries.json: %s — no JobSpy queries will run", e)
+            return [], {}
 
     def run_all_queries(self) -> list[dict]:
-        """Execute every query in QUERY_SETS, deduplicate, and filter seen jobs."""
+        """Execute every enabled query, deduplicate, and filter seen jobs."""
         all_jobs: dict[str, dict] = {}  # normalized_url -> job dict
-        total = len(QUERY_SETS)
+        queries = self._queries
+        total = len(queries)
 
-        for i, query_config in enumerate(QUERY_SETS, start=1):
+        if not queries:
+            logger.warning("No JobSpy queries configured")
+            return []
+
+        for i, query_config in enumerate(queries, start=1):
             search_term = query_config["search_term"]
-            is_remote = query_config.get("is_remote", True)
-            location = query_config.get("location", self.settings.get("location", ""))
+            is_remote = query_config.get("is_remote", self._defaults.get("is_remote", True))
+            location = query_config.get("location", self._defaults.get("location", self.settings.get("location", "")))
 
             try:
                 df = scrape_jobs(

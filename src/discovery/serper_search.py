@@ -3,28 +3,20 @@ Google Search discovery module via SearchAPI.io.
 
 Uses the SearchAPI.io API to search Google for job postings,
 targeting niche boards and career pages that JobSpy might miss.
+
+Queries are loaded from config/discovery_queries.json so they can be
+tuned without code changes.
 """
 
+import json
 import logging
 import time
 import urllib.parse
+from pathlib import Path
 
 import httpx
 
 logger = logging.getLogger(__name__)
-
-SEARCH_QUERIES = [
-    '"AI enablement" OR "AI adoption" manager job remote -linkedin.com -indeed.com',
-    '"learning architect" AI remote job posting 2026',
-    '"director of AI training" OR "head of AI academy" job',
-    'site:greenhouse.io "AI enablement" OR "learning" manager',
-    'site:lever.co "AI" "learning" manager',
-    '"AI change management" lead OR manager job remote',
-    '"workforce AI" OR "AI coaching" job posting',
-    'AgTech OR agriculture "AI training" OR "AI enablement" job',
-    'robotics company "learning" OR "training" manager job',
-    '"center of excellence" AI enablement job posting',
-]
 
 _JOB_INDICATORS = [
     "/jobs/",
@@ -52,6 +44,23 @@ class SerperSearch:
     def __init__(self, settings: dict, state_manager):
         self.api_key = settings.get("serper_api_key") or ""
         self.state_manager = state_manager
+        self._queries = self._load_queries()
+
+    @staticmethod
+    def _load_queries() -> list[dict]:
+        """Load Serper queries from config/discovery_queries.json."""
+        base_dir = Path(__file__).resolve().parent.parent.parent
+        config_path = base_dir / "config" / "discovery_queries.json"
+        try:
+            with open(config_path, "r", encoding="utf-8") as fh:
+                config = json.load(fh)
+            serper_config = config.get("serper", {})
+            queries = [q for q in serper_config.get("queries", []) if q.get("enabled", True)]
+            logger.info("Loaded %d enabled Serper queries from config", len(queries))
+            return queries
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            logger.warning("Could not load discovery_queries.json: %s — no Serper queries will run", e)
+            return []
 
     def search_all(self) -> list[dict]:
         """Execute all search queries and return a combined list of job dicts."""
@@ -59,11 +68,17 @@ class SerperSearch:
             logger.info("Search API key not configured; skipping Google search discovery")
             return []
 
+        queries = self._queries
+        if not queries:
+            logger.warning("No Serper queries configured")
+            return []
+
         all_jobs: list[dict] = []
-        total = len(SEARCH_QUERIES)
+        total = len(queries)
 
         with httpx.Client(timeout=30) as client:
-            for i, query in enumerate(SEARCH_QUERIES, start=1):
+            for i, query_config in enumerate(queries, start=1):
+                query = query_config["query"]
                 try:
                     response = client.get(
                         "https://www.searchapi.io/api/v1/search",
