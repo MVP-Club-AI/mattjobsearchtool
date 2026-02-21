@@ -201,6 +201,38 @@ Discovery (3 sources)  →  Triage (free)  →  Scoring (Claude API)  →  Repor
 - 40-59: Weak overlap
 - 0-39: Poor fit (filtered out)
 
+## Cost & Performance Tuning
+
+The scoring step is the only part that costs money — discovery and triage are free. Three settings in `config/settings.json` control how much a run costs:
+
+### The three levers
+
+| Setting | What it does | Lower cost | Higher quality |
+|---|---|---|---|
+| `claude_model` | Which Claude model scores jobs | `claude-3-5-haiku-20241022` (~$0.005/job) | `claude-sonnet-4-5-20250929` (~$0.02/job) |
+| `min_triage_score` | How many keyword hits a job needs before Claude sees it (1-10) | Higher number = fewer jobs scored | Lower number = more jobs scored, less likely to miss edge cases |
+| `max_jobs_per_run` | Hard cap on jobs sent to Claude per run | Lower cap = predictable cost ceiling | Higher cap = nothing gets deferred |
+
+### Cost reference
+
+| Configuration | Jobs scored | Cost/run | Quality |
+|---|---|---|---|
+| Haiku + tight triage (4) + cap 150 | ~100-150 | **~$0.50-0.75** | Good for structured scoring tasks |
+| Haiku + loose triage (3) + cap 300 | ~200-300 | **~$1.00-1.50** | Broader coverage, still cheap |
+| Sonnet + tight triage (4) + cap 150 | ~100-150 | **~$2.00-3.00** | Best scoring nuance, controlled cost |
+| Sonnet + loose triage (3) + cap 500 | ~200-500 | **~$4.00-10.00** | Maximum coverage + quality |
+
+### How to handle tuning requests
+
+When a user asks to adjust cost or quality, update `config/settings.json` conversationally:
+
+- **"Make it cheaper" / "Reduce cost"** → Switch to Haiku, raise `min_triage_score`, lower `max_jobs_per_run`. Explain the tradeoff: fewer jobs scored, slightly less nuanced scoring.
+- **"I want better scoring quality" / "Scores feel off"** → Switch to Sonnet. Explain it costs more per job but produces more nuanced evaluations.
+- **"I'm missing good jobs"** → Lower `min_triage_score` (to 2 or 3) and/or raise `max_jobs_per_run`. More jobs get scored but cost goes up.
+- **"I'm getting too many junk results scored"** → Raise `min_triage_score` (to 5 or 6). Fewer jobs make it past triage.
+
+Always tell the user the approximate cost impact of the change. Frame it as experimentation — these are dials to turn, and the right setting depends on their search phase and budget.
+
 ### Personal files (all gitignored):
 - `.env` — API keys
 - `config/profile_index.json` — user's profile

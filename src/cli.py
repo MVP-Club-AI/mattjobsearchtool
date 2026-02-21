@@ -100,7 +100,9 @@ def run(ctx):
 
     # Stage 1: Fast keyword triage (free, instant)
     click.echo(f"\nRunning keyword triage + location filter on {total_discovered} jobs...")
-    triaged = triage_batch(all_jobs, min_score=3)
+    max_age_hours = settings.get("hours_old", 72)
+    min_triage = settings.get("min_triage_score", 3)
+    triaged = triage_batch(all_jobs, min_score=min_triage, max_age_hours=max_age_hours)
     rejected_count = total_discovered - len(triaged)
     click.echo(f"  {len(triaged)} passed triage, {rejected_count} rejected (keyword or non-Denver/non-remote)")
 

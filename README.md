@@ -19,7 +19,7 @@ You talk to Claude Code. It handles the rest.
 
 <br>
 
-[The Problem](#the-problem) &middot; [Your First Win](#your-first-win) &middot; [The Flywheel](#the-flywheel-why-it-gets-better) &middot; [Things You Can Say](#things-you-can-say) &middot; [LinkedIn Data](#make-it-smarter-linkedin-data)
+[The Problem](#the-problem) &middot; [Your First Win](#your-first-win) &middot; [The Flywheel](#the-flywheel-why-it-gets-better) &middot; [Things You Can Say](#things-you-can-say) &middot; [Cost & Quality](#tuning-cost--quality) &middot; [LinkedIn Data](#make-it-smarter-linkedin-data)
 
 </div>
 
@@ -35,6 +35,7 @@ You talk to Claude Code. It handles the rest.
 - [The Flywheel: Why It Gets Better](#the-flywheel-why-it-gets-better)
 - [What the Scores Mean](#what-the-scores-mean)
 - [Things You Can Say](#things-you-can-say)
+- [Tuning Cost & Quality](#tuning-cost--quality)
 - [Make It Smarter: LinkedIn Data](#make-it-smarter-linkedin-data)
 - [What to Do With Results](#what-to-do-with-results)
 - [Your Data Stays Yours](#your-data-stays-yours)
@@ -69,7 +70,7 @@ flowchart LR
 You get a ranked list. The best matches float to the top with scores, reasoning, salary estimates, and apply links. If you uploaded your LinkedIn connections, it flags when you know someone at the company.[^1]
 
 > [!NOTE]
-> A typical run scans **2,000+ jobs**, filters down to a few hundred, and scores the best matches — all automatically. The discovery and filtering are free. The AI scoring step uses the Claude API and costs a few dollars per run.
+> A typical run scans **2,000+ jobs**, filters down to a few hundred, and scores the best matches — all automatically. The discovery and filtering are free. The AI scoring step uses the Claude API — cost depends on your [model and settings](#tuning-cost--quality), from under $1 to a few dollars per run.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -271,6 +272,56 @@ Once you're set up, just talk to Claude Code in plain English.
 | <kbd>How's my search going overall?</kbd> | Shows stats — jobs scanned, top queries, network size |
 
 </details>
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+---
+
+## Tuning Cost & Quality
+
+The discovery and filtering stages are free. The only cost is the **AI scoring step**, where Claude reads each job that passes the keyword filter. Three settings control how much a run costs — tell Claude Code to adjust them, or edit `config/settings.json` directly.
+
+<table>
+<tr>
+<td width="33%">
+
+### Scoring model
+
+`claude_model`
+
+Haiku is fast and cheap (~$0.005/job). Sonnet is more nuanced (~$0.02/job). Both follow the same rubric — the difference is how well the model handles edge cases.
+
+</td>
+<td width="33%">
+
+### Triage strictness
+
+`min_triage_score`
+
+How many keyword hits a job needs before Claude scores it (1-10 scale). Higher = fewer jobs scored = lower cost. Lower = broader coverage = might catch edge cases.
+
+</td>
+<td width="33%">
+
+### Jobs per run cap
+
+`max_jobs_per_run`
+
+Hard ceiling on how many jobs get sent to Claude. A predictable way to control your maximum cost per run.
+
+</td>
+</tr>
+</table>
+
+| Configuration | ~Jobs scored | ~Cost/run |
+|---|---|---|
+| Haiku + strict triage + 150 cap | 100-150 | **$0.50-0.75** |
+| Haiku + loose triage + 300 cap | 200-300 | **$1.00-1.50** |
+| Sonnet + strict triage + 150 cap | 100-150 | **$2.00-3.00** |
+| Sonnet + loose triage + 500 cap | 200-500 | **$4.00-10.00** |
+
+> [!TIP]
+> Start cheap and experiment. You can always tell Claude Code <kbd>Switch to Sonnet for better scoring</kbd> or <kbd>Make my searches cheaper</kbd> — it adjusts the settings for you and tells you the cost impact.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
