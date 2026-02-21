@@ -13,18 +13,15 @@ __pycache__/
 dist/
 build/
 
-# Personal data - LinkedIn connections
-data/connections.csv
-
-# Personal search results and reports
-data/seen_jobs.json
-data/query_performance.json
-data/reports/
-data/logs/
+# Personal data — all runtime data is local-only
+data/*
+!data/.gitkeep
 
 # Personal profile and job-specific configs
 config/profile_index.json
 config/verisk_reference.json
+config/settings.json
+config/discovery_queries.json
 
 # Career input files (resumes, cover letters, etc.) — keep the placeholder
 career-inputs/*
