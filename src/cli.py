@@ -102,9 +102,9 @@ def run(ctx):
     click.echo(f"\nRunning keyword triage + location filter on {total_discovered} jobs...")
     max_age_hours = settings.get("hours_old", 72)
     min_triage = settings.get("min_triage_score", 3)
-    triaged = triage_batch(all_jobs, min_score=min_triage, max_age_hours=max_age_hours)
+    triaged = triage_batch(all_jobs, min_score=min_triage, max_age_hours=max_age_hours, settings=settings)
     rejected_count = total_discovered - len(triaged)
-    click.echo(f"  {len(triaged)} passed triage, {rejected_count} rejected (keyword or non-Denver/non-remote)")
+    click.echo(f"  {len(triaged)} passed triage, {rejected_count} rejected (keyword/location/age filter)")
 
     # Stage 2: Cap at max_jobs_per_run (triaged list is already sorted by triage score desc)
     max_jobs = settings.get("max_jobs_per_run", 500)

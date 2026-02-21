@@ -134,6 +134,13 @@ Don't pressure. This is an upgrade, not a prerequisite.
 
 Create `config/settings.json` from `config/settings.example.json`. Set the user's location and remote preference based on what they told you. Don't ask about thresholds or technical settings — use sensible defaults. These can be tuned later after they've seen results.
 
+Also build the location filter fields:
+- `location_allowlist`: A list of city and region names near the user's location. Include the main city, surrounding suburbs/metro area cities, and the state name. For example, if the user is in Austin, TX, include "austin", "round rock", "cedar park", "san marcos", "georgetown", "texas", etc.
+- `location_state_abbrev`: The 2-letter state abbreviation (e.g. "TX", "CO", "CA").
+- `location_exempt_companies`: Leave empty unless the user mentions specific companies they'd relocate for.
+
+The location filter uses these to decide which on-site jobs to keep. Remote jobs always pass regardless.
+
 ### Step 8: Discovery Queries
 
 Based on the user's target titles, core competencies, and industry interests from their profile, build `config/discovery_queries.json`. Use `config/discovery_queries.example.json` as the template.

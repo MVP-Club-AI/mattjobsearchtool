@@ -12,5 +12,13 @@
   "scoring_batch_size": 10,
   "data_dir": "data",
   "connections_csv": "data/connections.csv",
-  "description_max_chars": 4000
+  "description_max_chars": 4000,
+  "location_allowlist": [
+    "your city",
+    "nearby city 1",
+    "nearby city 2",
+    "your state"
+  ],
+  "location_state_abbrev": "XX",
+  "location_exempt_companies": []
 }

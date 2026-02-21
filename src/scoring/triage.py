@@ -230,66 +230,38 @@ _DESCRIPTION_DEGREE_REJECT_RES = [
 ]
 
 # ---------------------------------------------------------------------------
-# Location filter -- hard criteria: Remote or Denver/Front Range only
-# Exception: Anthropic jobs always pass regardless of location.
+# Location filter -- loaded from settings.json at runtime.
+#
+# settings.json fields used:
+#   location_allowlist: list of city/region terms that pass the filter
+#   location_state_abbrev: 2-letter state code (e.g. "CO") for abbreviation matching
+#   location_exempt_companies: list of company names that bypass the filter
+#
+# Remote/anywhere/distributed/wfh jobs always pass regardless of config.
 # ---------------------------------------------------------------------------
 
-_LOCATION_EXEMPT_COMPANIES = [
-    "anthropic",
-]
-
-_ALLOWED_LOCATIONS = [
+_REMOTE_TERMS = [
     "remote",
     "anywhere",
     "distributed",
     "work from home",
     "wfh",
-    # Denver metro / Front Range
-    "denver",
-    "boulder",
-    "colorado springs",
-    "fort collins",
-    "loveland",
-    "longmont",
-    "broomfield",
-    "aurora",
-    "lakewood",
-    "arvada",
-    "westminster",
-    "thornton",
-    "centennial",
-    "littleton",
-    "castle rock",
-    "golden",
-    "parker",
-    "highlands ranch",
-    "colorado",
-    " co ",
-    " co,",
-    ", co",
 ]
 
-_ALLOWED_LOCATION_RE = re.compile(
-    r"\b("
-    + "|".join(re.escape(loc) for loc in _ALLOWED_LOCATIONS)
-    + r")\b",
-    re.IGNORECASE,
-)
 
-# Also match state abbreviation patterns like "Denver, CO" or "CO, USA"
-_CO_ABBREV_RE = re.compile(r"\bCO\b")
+def passes_location_filter(job: dict, settings: dict | None = None) -> bool:
+    """Return True if the job is remote or in an allowed location.
 
-
-def passes_location_filter(job: dict) -> bool:
-    """Return True if the job is remote or in the Denver/Front Range area.
-
-    Exception: Companies in _LOCATION_EXEMPT_COMPANIES always pass.
+    Allowed locations and exempt companies are read from settings.
     Jobs with no location info pass (benefit of the doubt).
     """
+    settings = settings or {}
+
     # Exception: exempt companies pass regardless of location
+    exempt_companies = settings.get("location_exempt_companies", [])
     company = (job.get("company") or "").strip().lower()
-    for exempt in _LOCATION_EXEMPT_COMPANIES:
-        if exempt in company:
+    for exempt in exempt_companies:
+        if exempt.lower() in company:
             return True
 
     location = (job.get("location") or "").strip()
@@ -298,17 +270,22 @@ def passes_location_filter(job: dict) -> bool:
 
     lower = location.lower()
 
-    # Check allowed location terms
-    for term in _ALLOWED_LOCATIONS:
+    # Remote jobs always pass
+    for term in _REMOTE_TERMS:
         if term in lower:
             return True
-
-    # Check for CO state abbreviation (case-sensitive to avoid false positives)
-    if _CO_ABBREV_RE.search(location):
+    if job.get("is_remote"):
         return True
 
-    # Also check is_remote flag if set
-    if job.get("is_remote"):
+    # Check user-configured allowed location terms
+    allowlist = settings.get("location_allowlist", [])
+    for term in allowlist:
+        if term.lower() in lower:
+            return True
+
+    # Check state abbreviation if configured (case-sensitive to avoid false positives)
+    state_abbrev = settings.get("location_state_abbrev", "")
+    if state_abbrev and re.search(r"\b" + re.escape(state_abbrev) + r"\b", location):
         return True
 
     return False
@@ -408,7 +385,8 @@ def _is_too_old(job: dict, max_age_hours: int) -> bool:
 
 
 def triage_batch(jobs: list[dict], min_score: int = 1,
-                 max_age_hours: int = 0) -> list[dict]:
+                 max_age_hours: int = 0,
+                 settings: dict | None = None) -> list[dict]:
     """Score and filter a batch of jobs, returning those above min_score.
 
     Jobs are returned sorted by triage score descending so the most
@@ -419,6 +397,8 @@ def triage_batch(jobs: list[dict], min_score: int = 1,
     Args:
         max_age_hours: If > 0, reject jobs posted more than this many
             hours ago. Search-sourced jobs with no date are also rejected.
+        settings: Config dict for location filter (location_allowlist,
+            location_state_abbrev, location_exempt_companies).
     """
     results = []
     rejected = 0
@@ -434,7 +414,7 @@ def triage_batch(jobs: list[dict], min_score: int = 1,
             rejected += 1
             continue
 
-        if not passes_location_filter(job):
+        if not passes_location_filter(job, settings):
             location_rejected += 1
             job["triage_score"] = 0  # Mark as rejected for downstream tracking
             continue
