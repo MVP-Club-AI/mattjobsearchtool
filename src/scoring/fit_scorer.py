@@ -1,6 +1,9 @@
 """
-Fit scoring module - evaluates job descriptions against Matthew's profile
-using the Anthropic Python SDK.
+Fit scoring module — evaluates job descriptions against the candidate's
+profile using the Anthropic Python SDK.
+
+The scoring system prompt is built dynamically from the user's
+profile_index.json so no personal data is hardcoded in source.
 """
 
 import json
@@ -11,40 +14,28 @@ import anthropic
 
 logger = logging.getLogger(__name__)
 
-SCORING_SYSTEM_PROMPT = """You are a job-fit evaluator. You will be given a candidate profile and a job description. Your task is to score how well the job matches the candidate.
+_SCORING_PROMPT_TEMPLATE = """You are a job-fit evaluator. You will be given a candidate profile and a job description. Your task is to score how well the job matches the candidate.
 
 Return ONLY a valid JSON object. No markdown, no explanation, no code fences. Just the JSON.
 
 ## Scoring Rubric
 
-- 90-100: Near-perfect match. The role explicitly involves AI enablement/adoption, learning/training design, or coaching teams on AI workflows. Correct seniority level (Manager/Director). Strong alignment with the candidate's core mission.
-- 75-89: Strong match. At least 2 of the 3 core pillars are present (AI enablement, learning/training design, product/change management). Minor gaps in seniority or domain.
+- 90-100: Near-perfect match. The role explicitly aligns with the candidate's target titles and core competencies. Correct seniority level. Strong alignment with the candidate's stated mission and profile summary.
+- 75-89: Strong match. At least 2 of the candidate's top 3 competency areas are present. Minor gaps in seniority or domain.
 - 60-74: Moderate match. Clear entry points exist for the candidate's skills, but the role emphasizes different primary aspects. The candidate could credibly apply but would need to frame their experience carefully.
 - 40-59: Weak match. Some overlapping skills or keywords, but the role is fundamentally different from the candidate's trajectory.
 - 0-39: Poor match. Little to no meaningful overlap.
 
-## Candidate Sweet Spot
+{candidate_context}
 
-The ideal role for this candidate has:
-- AI adoption/enablement as the PRIMARY mission (not a side responsibility)
-- Learning design combined with AI tooling — designing how people learn to use AI
-- Coaching teams on AI workflows through hands-on practice
-- Manager or Director level seniority (NOT individual contributor, NOT VP/C-suite)
-- Base salary of $135k or above
+## General Scoring Guidelines
 
-## Critical Context About the Candidate
-
-- The candidate BUILDS with AI tools. They do vibe coding, use Claude Code, and create working prototypes. They are not a pure strategist who only writes decks.
-- They coach through hands-on practice and demonstration, not just theory.
-- Their background is learning/education moving toward AI enablement. This is a career pivot INTO AI, not out of it.
-- They are NOT a software engineer, data scientist, or ML engineer. Do not score engineering roles highly.
-- They are NOT looking for pure HR/compliance L&D roles (mandatory training, onboarding logistics, LMS administration). These should score low.
-- Remote work is strongly preferred. Fully on-site roles should be penalized slightly.
+- THIN DESCRIPTIONS: If the job description is very short, vague, or clearly incomplete (under 200 words), cap the score at 70 maximum regardless of how good the title sounds. You cannot confirm fit without seeing actual requirements, responsibilities, and qualifications. Note in the reasoning that the description was insufficient to fully evaluate.
 - Network connections at a company are a meaningful advantage. Having connections who can provide referrals or introductions should be treated as a positive signal. For borderline jobs (scoring 55-70), the presence of strong network connections (especially in relevant departments) can justify a 3-5 point boost. This should NOT override poor fit — a bad match with connections is still a bad match.
 
 ## Required JSON Output Schema
 
-{
+{{
     "fit_score": <integer 0-100>,
     "reasoning": "<2-3 sentences explaining the score>",
     "salary_signal": "<one of: explicitly_listed | likely_above_floor | likely_below_floor | unknown>",
@@ -53,8 +44,91 @@ The ideal role for this candidate has:
     "seniority_match": "<one of: target | stretch | below>",
     "key_overlaps": ["<2-4 strings listing areas of alignment>"],
     "key_gaps": ["<strings listing areas of misalignment>"]
-}
+}}
 """
+
+
+def _build_candidate_context(profile: dict, settings: dict) -> str:
+    """Build the candidate-specific scoring prompt sections from profile data."""
+    sections = []
+
+    # --- Candidate Sweet Spot ---
+    sweet_spot = ["## Candidate Sweet Spot", ""]
+    sweet_spot.append("The ideal role for this candidate based on their profile:")
+    sweet_spot.append("")
+
+    summary = profile.get("profile_summary", "")
+    if summary:
+        sweet_spot.append(f"- {summary}")
+
+    target_titles = profile.get("target_titles", [])
+    if target_titles:
+        sweet_spot.append(f"- Target roles: {', '.join(target_titles[:8])}")
+
+    competencies = profile.get("core_competencies", [])
+    if competencies:
+        sweet_spot.append(f"- Core competencies: {', '.join(competencies[:8])}")
+
+    salary_floor = profile.get("salary_floor")
+    if salary_floor:
+        sweet_spot.append(f"- Base salary of ${salary_floor:,} or above")
+
+    location = settings.get("location", profile.get("location", ""))
+    is_remote = settings.get("is_remote", profile.get("remote_preferred", True))
+    if is_remote and location:
+        sweet_spot.append(
+            f"- Remote work is required. The candidate will also consider "
+            f"roles in {location}. Roles requiring relocation to other "
+            f"cities should be heavily penalized (subtract 15-25 points)."
+        )
+    elif is_remote:
+        sweet_spot.append(
+            "- Remote work is required. On-site roles should be heavily penalized."
+        )
+    elif location:
+        sweet_spot.append(f"- Location: {location}")
+
+    industries = profile.get("industry_interests", [])
+    if industries:
+        sweet_spot.append(f"- Industry interests: {', '.join(industries[:6])}")
+
+    sections.append("\n".join(sweet_spot))
+
+    # --- Critical Context ---
+    context = ["## Critical Context About the Candidate", ""]
+
+    highlights = profile.get("experience_highlights", [])
+    for h in highlights[:6]:
+        context.append(f"- {h}")
+
+    education = profile.get("education", [])
+    if education:
+        edu_parts = []
+        for e in education:
+            degree = e.get("degree", "")
+            school = e.get("school", "")
+            if degree and school:
+                edu_parts.append(f"{degree} from {school}")
+            elif degree:
+                edu_parts.append(degree)
+        if edu_parts:
+            context.append(f"- Education: {'; '.join(edu_parts)}.")
+
+    tools = profile.get("tools", [])
+    if tools:
+        context.append(f"- Tools and technologies: {', '.join(tools[:10])}")
+
+    sections.append("\n".join(context))
+
+    # --- Custom Scoring Notes ---
+    scoring_notes = profile.get("scoring_notes", [])
+    if scoring_notes:
+        notes = ["## Additional Scoring Instructions", ""]
+        for note in scoring_notes:
+            notes.append(f"- {note}")
+        sections.append("\n".join(notes))
+
+    return "\n\n".join(sections)
 
 SCORING_USER_PROMPT_TEMPLATE = """## Candidate Profile
 {profile_json}
@@ -121,6 +195,12 @@ class FitScorer:
         self.profile = profile
         self.verisk_reference = verisk_reference
 
+        # Build system prompt dynamically from profile
+        candidate_context = _build_candidate_context(profile, settings)
+        self._system_prompt = _SCORING_PROMPT_TEMPLATE.format(
+            candidate_context=candidate_context
+        )
+
     def score_job(self, job: dict, connections: list[dict] | None = None) -> dict | None:
         """Score a single job against the candidate profile.
 
@@ -168,7 +248,7 @@ class FitScorer:
             response = self.client.messages.create(
                 model=self.model,
                 max_tokens=1024,
-                system=SCORING_SYSTEM_PROMPT,
+                system=self._system_prompt,
                 messages=[{"role": "user", "content": user_prompt}],
             )
 
@@ -201,20 +281,22 @@ class FitScorer:
             job["key_gaps"] = score_data.get("key_gaps", [])
 
             if fit_score >= self.score_threshold:
-                logger.debug(
-                    "Job passed threshold: %s at %s (score=%d)",
+                logger.info(
+                    "PASSED: %s at %s (score=%d) — %s",
                     job.get("title"),
                     job.get("company"),
                     fit_score,
+                    score_data.get("reasoning", "")[:120],
                 )
                 return job
 
-            logger.debug(
-                "Job below threshold: %s at %s (score=%d, threshold=%d)",
+            logger.info(
+                "REJECTED: %s at %s (score=%d, threshold=%d) — %s",
                 job.get("title"),
                 job.get("company"),
                 fit_score,
                 self.score_threshold,
+                score_data.get("reasoning", "")[:120],
             )
             return None
 

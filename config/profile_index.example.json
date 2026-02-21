@@ -1,6 +1,6 @@
 {
   "name": "Your Name",
-  "location": "Denver, CO",
+  "location": "Your City, State",
   "salary_floor": 100000,
   "remote_preferred": true,
   "profile_summary": "A 2-3 sentence summary of who you are professionally. What's your superpower? What kind of roles are you targeting? What makes you different from other candidates?",
@@ -36,5 +36,10 @@
   "linkedin_skills": [
     "Skill from your LinkedIn profile 1",
     "Skill from your LinkedIn profile 2"
+  ],
+  "scoring_notes": [
+    "Optional: custom instructions for the job-fit scorer.",
+    "Example: 'I am NOT a software engineer — do not score engineering roles highly.'",
+    "Example: 'Roles requiring a JD or medical license should be penalized heavily.'"
   ]
 }
