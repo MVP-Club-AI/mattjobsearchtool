@@ -14,25 +14,30 @@ class ReportGenerator:
         self.reports_dir = Path(data_dir) / "reports"
         self.reports_dir.mkdir(parents=True, exist_ok=True)
 
-    def generate(self, scored_jobs: list[dict], stats: dict) -> str:
+    def generate(self, scored_jobs: list[dict], stats: dict,
+                 filename: str | None = None, title: str | None = None) -> str:
         """Generate a markdown report and save to file.
 
         Args:
             scored_jobs: List of scored job dicts, already sorted by fit_score descending.
             stats: Dict with keys like total_scanned, sources, etc.
+            filename: Custom filename (default: YYYY-MM-DD.md).
+            title: Custom report title (default: "Job Search Report -- {date}").
 
         Returns:
             The file path of the saved report as a string.
         """
         today = date.today().isoformat()
-        filename = f"{today}.md"
+        if filename is None:
+            filename = f"{today}.md"
         filepath = self.reports_dir / filename
 
         total_scanned = stats.get("total_scanned", 0)
         sources = stats.get("sources", "N/A")
 
+        report_title = title or f"Job Search Report -- {today}"
         lines = []
-        lines.append(f"# Job Search Report -- {today}")
+        lines.append(f"# {report_title}")
         lines.append("")
         lines.append(
             f"**Jobs scanned:** {total_scanned} "

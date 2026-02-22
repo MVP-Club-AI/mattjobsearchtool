@@ -54,11 +54,11 @@ Meanwhile, the perfect role — the one that actually fits your career trajector
 
 ## What If You Could Read Every Single One?
 
-That's what this tool does. It scans 2,000+ jobs across five major boards, 57+ company career pages, and Google — then Claude reads each one and scores it against your actual career story. Not keywords. Your story: where you've been, what you're good at, where you're headed.
+That's what this tool does. It scans 2,000+ jobs across five major boards, 65+ company career pages, and Google — then Claude reads each one and scores it against your actual career story. Not keywords. Your story: where you've been, what you're good at, where you're headed.
 
 ```mermaid
 flowchart LR
-    A["🔍 Discover\n5 job boards + 57 ATS + Google"] --> B["⚡ Filter\nLocation, keywords, direction"]
+    A["🔍 Discover\n5 job boards + 65 ATS + Google"] --> B["⚡ Filter\nLocation, keywords, direction"]
     B --> C["🧠 Score\nClaude reads & scores 0–100"]
     C --> D["📊 Report\nRanked list with reasoning"]
     style A fill:#114083,color:#fff,stroke:#fff
@@ -71,6 +71,16 @@ You get a ranked list. The best matches float to the top with scores, reasoning,
 
 > [!NOTE]
 > A typical run scans **2,000+ jobs**, filters down to a few hundred, and scores the best matches — all automatically. The discovery and filtering are free. The AI scoring step uses the Claude API — cost depends on your [model and settings](#tuning-cost--quality), from under $1 to a few dollars per run.
+
+### Three discovery sources
+
+| Source | What it covers | Requires |
+|---|---|---|
+| **JobSpy** | Indeed, LinkedIn, Glassdoor, Google Jobs, ZipRecruiter | Nothing (built-in) |
+| **ATS feeds** | 65+ company career pages (Greenhouse, Lever, Ashby, Workday) | Nothing (built-in) |
+| **Google search** | Niche boards, career pages, ATS postings that the other sources miss | [SearchAPI key](https://www.searchapi.io) |
+
+Without a SearchAPI key, the tool still searches five major job boards and 65+ company career pages directly. The Google search layer adds coverage for roles posted on smaller boards or company sites that aren't in the ATS monitoring list.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -90,8 +100,9 @@ The fastest way to understand what this tool does is to use it.
 |---|---|
 | **Your resume** (PDF, DOCX, or text) | Wherever you keep it — drop it in the project folder |
 | **An Anthropic API key** | [console.anthropic.com](https://console.anthropic.com) |
+| **A SearchAPI key** *(optional)* | [searchapi.io](https://www.searchapi.io) — 100 free searches/month |
 
-That's it. Everything else is optional and can be added later.
+The Anthropic key is required — it powers the AI scoring. The SearchAPI key enables Google search discovery, which finds jobs on niche boards and career pages that the main job boards miss. You can skip it and add it later, but your searches will be more thorough with it.
 
 </td>
 <td width="50%">
@@ -99,8 +110,8 @@ That's it. Everything else is optional and can be added later.
 ### Clone, open, talk
 
 ```bash
-git clone https://github.com/hasmatt1066/jobsearchtool.git
-cd jobsearchtool
+git clone https://github.com/MVP-Club-AI/mattjobsearchtool.git
+cd mattjobsearchtool
 claude
 ```
 

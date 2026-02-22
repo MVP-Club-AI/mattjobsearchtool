@@ -3,7 +3,7 @@
 import json
 import logging
 import os
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 import click
@@ -220,14 +220,39 @@ def search(ctx, query):
     network_matcher = NetworkMatcher(str(base_dir / "data" / "connections.csv"))
     scored_jobs = fit_scorer.score_batch(results, network_matcher=network_matcher)
 
-    # Generate ad-hoc report
-    report_gen = ReportGenerator(str(base_dir / "data"))
-    today = date.today().isoformat()
-    stats = {"total_scanned": len(results), "sources": "JobSpy (ad-hoc)"}
+    # Persist ad-hoc results to state (prevents re-scoring in future runs)
+    for job in results:
+        state_mgr.mark_seen(job["url"], {
+            "title": job.get("title", ""),
+            "company": job.get("company", ""),
+            "source": job.get("source", ""),
+            "fit_score": job.get("fit_score"),
+            "query": query,
+            "adhoc": True,
+        })
+    state_mgr.save()
 
-    # Save as ad-hoc report with query in filename
+    # Generate ad-hoc report with unique filename
+    report_gen = ReportGenerator(str(base_dir / "data"))
     safe_query = query.replace(" ", "-").replace("/", "-")[:40]
-    report_path = report_gen.generate(scored_jobs, stats)
+    timestamp = datetime.now().strftime("%Y-%m-%d-%H%M%S")
+    report_filename = f"search-{safe_query}-{timestamp}.md"
+    report_title = f"Ad-Hoc Search: {query} -- {date.today().isoformat()}"
+    stats = {"total_scanned": len(results), "sources": "JobSpy (ad-hoc)"}
+    report_path = report_gen.generate(scored_jobs, stats,
+                                      filename=report_filename, title=report_title)
+
+    # Save companion JSON with structured data
+    json_filename = report_filename.replace(".md", ".json")
+    json_path = Path(report_path).parent / json_filename
+    json_data = {
+        "query": query,
+        "timestamp": datetime.now().isoformat(),
+        "total_scanned": len(results),
+        "matches": len(scored_jobs),
+        "jobs": scored_jobs,
+    }
+    json_path.write_text(json.dumps(json_data, indent=2, default=str), encoding="utf-8")
 
     # Print results to console
     click.echo(f"\n--- Results ({len(scored_jobs)} passed threshold) ---")
@@ -243,6 +268,7 @@ def search(ctx, query):
         click.echo(f"  [{score:3d}] {title} @ {company}{conn_str}")
 
     click.echo(f"\nReport saved: {report_path}")
+    click.echo(f"Data saved: {json_path}")
 
 
 @cli.command()

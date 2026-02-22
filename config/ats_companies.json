@@ -31,11 +31,6 @@
       "board_token": "coursera"
     },
     {
-      "name": "Robinhood",
-      "ats": "greenhouse",
-      "board_token": "robinhood"
-    },
-    {
       "name": "GitLab",
       "ats": "greenhouse",
       "board_token": "gitlab"
@@ -46,16 +41,6 @@
       "board_token": "dropbox"
     },
     {
-      "name": "Coinbase",
-      "ats": "greenhouse",
-      "board_token": "coinbase"
-    },
-    {
-      "name": "Affirm",
-      "ats": "greenhouse",
-      "board_token": "affirm"
-    },
-    {
       "name": "Quizlet",
       "ats": "lever",
       "board_token": "quizlet-2"
@@ -64,11 +49,6 @@
       "name": "Newsela",
       "ats": "greenhouse",
       "board_token": "newsela"
-    },
-    {
-      "name": "Wiz",
-      "ats": "greenhouse",
-      "board_token": "wizinc"
     },
     {
       "name": "BetterUp",
@@ -116,26 +96,6 @@
       "board_token": "sana-roles"
     },
     {
-      "name": "Microsoft",
-      "ats": "custom",
-      "board_token": null
-    },
-    {
-      "name": "Amazon",
-      "ats": "custom",
-      "board_token": null
-    },
-    {
-      "name": "Google",
-      "ats": "custom",
-      "board_token": null
-    },
-    {
-      "name": "Palantir",
-      "ats": "custom",
-      "board_token": null
-    },
-    {
       "name": "aiEDU",
       "ats": "greenhouse",
       "board_token": "aiedu"
@@ -146,16 +106,6 @@
       "board_token": "arthur"
     },
     {
-      "name": "Blend",
-      "ats": "greenhouse",
-      "board_token": "blend"
-    },
-    {
-      "name": "Customer.io",
-      "ats": "greenhouse",
-      "board_token": "customerio"
-    },
-    {
       "name": "Data & Society Research Institute",
       "ats": "greenhouse",
       "board_token": "datasocietyresearchinstitute"
@@ -164,11 +114,6 @@
       "name": "Ellevation Education",
       "ats": "lever",
       "board_token": "ellevationeducation"
-    },
-    {
-      "name": "Ethos",
-      "ats": "greenhouse",
-      "board_token": "ethos"
     },
     {
       "name": "Freshworks",
@@ -184,16 +129,6 @@
       "name": "IXL Learning",
       "ats": "greenhouse",
       "board_token": "ixllearning"
-    },
-    {
-      "name": "Omidyar Network",
-      "ats": "greenhouse",
-      "board_token": "omidyarnetwork"
-    },
-    {
-      "name": "One Project",
-      "ats": "greenhouse",
-      "board_token": "oneproject"
     },
     {
       "name": "Outschool",
@@ -264,6 +199,131 @@
       "name": "Zendesk",
       "ats": "workday",
       "board_token": "zendesk:wd1:zendesk"
+    },
+    {
+      "name": "Cohere",
+      "ats": "ashby",
+      "board_token": "cohere"
+    },
+    {
+      "name": "Scale AI",
+      "ats": "greenhouse",
+      "board_token": "scaleai"
+    },
+    {
+      "name": "Runway",
+      "ats": "greenhouse",
+      "board_token": "runwayml"
+    },
+    {
+      "name": "Stability AI",
+      "ats": "greenhouse",
+      "board_token": "stabilityai"
+    },
+    {
+      "name": "Figma",
+      "ats": "greenhouse",
+      "board_token": "figma"
+    },
+    {
+      "name": "Vercel",
+      "ats": "greenhouse",
+      "board_token": "vercel"
+    },
+    {
+      "name": "Replit",
+      "ats": "ashby",
+      "board_token": "replit"
+    },
+    {
+      "name": "Descript",
+      "ats": "greenhouse",
+      "board_token": "descript"
+    },
+    {
+      "name": "Databricks",
+      "ats": "greenhouse",
+      "board_token": "databricks"
+    },
+    {
+      "name": "Datadog",
+      "ats": "greenhouse",
+      "board_token": "datadog"
+    },
+    {
+      "name": "Twilio",
+      "ats": "greenhouse",
+      "board_token": "twilio"
+    },
+    {
+      "name": "Stripe",
+      "ats": "greenhouse",
+      "board_token": "stripe"
+    },
+    {
+      "name": "HubSpot",
+      "ats": "greenhouse",
+      "board_token": "hubspot"
+    },
+    {
+      "name": "Udemy",
+      "ats": "greenhouse",
+      "board_token": "udemy"
+    },
+    {
+      "name": "Degreed",
+      "ats": "greenhouse",
+      "board_token": "degreed"
+    },
+    {
+      "name": "2U",
+      "ats": "greenhouse",
+      "board_token": "2u"
+    },
+    {
+      "name": "Clever",
+      "ats": "greenhouse",
+      "board_token": "clever"
+    },
+    {
+      "name": "Grammarly",
+      "ats": "greenhouse",
+      "board_token": "grammarly"
+    },
+    {
+      "name": "Airtable",
+      "ats": "greenhouse",
+      "board_token": "airtable"
+    },
+    {
+      "name": "Webflow",
+      "ats": "greenhouse",
+      "board_token": "webflow"
+    },
+    {
+      "name": "ElevenLabs",
+      "ats": "ashby",
+      "board_token": "elevenlabs"
+    },
+    {
+      "name": "Sierra",
+      "ats": "ashby",
+      "board_token": "sierra"
+    },
+    {
+      "name": "Harvey",
+      "ats": "ashby",
+      "board_token": "harvey"
+    },
+    {
+      "name": "Articulate",
+      "ats": "lever",
+      "board_token": "articulate"
+    },
+    {
+      "name": "Jobgether",
+      "ats": "lever",
+      "board_token": "jobgether"
     }
   ]
 }
